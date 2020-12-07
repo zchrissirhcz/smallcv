@@ -106,15 +106,24 @@ void imwrite(const char* filename, const sv::Mat& image)
     int width = static_cast<int>(image.get_width());
     int height = static_cast<int>(image.get_height());
     assert(image.get_channels()==3); // TODO: support gray image
-    if(0==strcmp(ext, ".jpg")) {
+    int save_status = 0;
+    if (0==strcmp(ext, ".jpg")) {
         int quality = 100;
-        stbi_write_jpg(filename, width, height, 3, image.data, quality);
+        save_status = stbi_write_jpg(filename, width, height, 3, image.data, quality);
+        assert(save_status!=0);
     }
-    else if(0==strcmp(ext, ".png")) {
+    else if (0==strcmp(ext, ".png")) {
         int stride_in_bytes = width * 3; // TODO: Mat may use line alignment
-        stbi_write_png(filename, width, height, 3, image.data, stride_in_bytes);
+        save_status = stbi_write_png(filename, width, height, 3, image.data, stride_in_bytes);
+        assert(save_status!=0);
     }
-    // TODO: support .bmp format here
+    else if (0==strcmp(ext, ".bmp")) {
+        save_status = stbi_write_bmp(filename, width, height, 3, image.data);
+        assert(save_status!=0);
+    }
+    else {
+        fprintf(stderr, "%s format is not supported yet!\n", ext);
+    }
     // TODO: more types checking required
 }
 
@@ -144,6 +153,7 @@ int main() {
     sv::Mat image = imread(image_path);
     rgb_bgr_swap_inplace(image);
     imwrite("mingren_swap.jpg", image);
+    imwrite("mingren_swap.bmp", image);
 
     return 0;
 }
