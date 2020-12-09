@@ -102,5 +102,61 @@ namespace sv {
     {
         imwrite(save_path.c_str(), image);
     }
+
+
+    template<typename _Tp>
+    Rect_<_Tp>::Rect_(): 
+        x(0), y(0), width(0), height(0)
+    {
+    }
+
+    template<typename _Tp>
+    Rect_<_Tp>::Rect_(_Tp _x, _Tp _y, _Tp _width, _Tp _height): 
+        x(_x), y(_y), width(_width), height(_height)
+    {
+    }
+
+    template<typename _Tp>
+    Rect_<_Tp>::Rect_(const Rect_<_Tp>& r): 
+        x(r.x), y(r.y), width(r.width), height(r.height)
+    {
+    }
+
+    template<typename _Tp>
+    Rect_<_Tp>::Rect_(Rect_<_Tp>&& r) noexcept: 
+        x(std::move(r.x)), y(std::move(r.y)), width(std::move(r.width)), height(std::move(r.height))
+    {
+    }
     
+    template<typename _Tp>
+    Rect_<_Tp>& Rect_<_Tp>::operator= (const Rect_<_Tp>& r)
+    {
+        x = r.x;
+        y = r.y;
+        width = r.width;
+        height = r.height;
+        return *this;
+    }
+
+    template<typename _Tp>
+    Rect_<_Tp>& Rect_<_Tp>::operator=(Rect_<_Tp>&& r) noexcept
+    {
+        x = std::move(r.x);
+        y = std::move(r.y);
+        width = std::move(r.width);
+        height = std::move(r.height);
+        return *this;
+    }
+
+    template<typename _Tp>
+    _Tp Rect_<_Tp>::area() const
+    {
+        const _Tp result = width * height;
+
+        // make sure result fits in the return value
+        assert(!std::numeric_limits<_Tp>::is_integer
+               || width == 0 || result / width == height);
+        return result;
+    }
+
 }
