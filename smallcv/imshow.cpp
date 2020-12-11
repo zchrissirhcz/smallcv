@@ -136,6 +136,7 @@ static unsigned int create_texture(const Mat& im)
     image_upside_down(im, im_upsd);
 
     //TODO: set alignment here
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //glPixelStorei(GL_UNPACK_ALIGNMENT, im->align);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 256, 256, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.get_width(), im_upsd.get_height(), 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data.get());

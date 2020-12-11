@@ -42,10 +42,20 @@ if(SMALLCV_IMSHOW)
     target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMSHOW)
 endif()
 
+
+#----------------------------------------
+# basic example
+#----------------------------------------
+add_executable(basic_example
+    examples/example.cpp
+)
+target_link_libraries(basic_example smallcv)
+
+#----------------------------------------
+# ncnn examples
+#----------------------------------------
 set(ncnn_DIR "E:/lib/ncnn/20201210/lib/cmake/ncnn" CACHE PATH "folder that contains ncnnConfig.cmake")
 find_package(ncnn REQUIRED)
-
-target_link_libraries(smallcv ncnn)
 
 add_executable(ncnn_squeezenet
     examples/ncnn/squeezenet.cpp
