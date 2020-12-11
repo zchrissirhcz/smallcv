@@ -26,8 +26,27 @@ if(SMALLCV_IMSHOW)
         smallcv/imshow.cpp
         deps/imshow/glad/glad.c
     )
-    set(glfw3_ROOT "D:/lib/glfw/3.3/x64/vc15/lib/cmake/glfw3")
-    find_package(glfw3 REQUIRED)
+
+    #----------------------------------------
+    # glfw
+    #----------------------------------------
+    #set(glfw3_ROOT "D:/lib/glfw/3.3/x64/vc15/lib/cmake/glfw3")
+    set(glfw3_ROOT "${CMAKE_SOURCE_DIR}/deps/imshow/glfw")
+    find_package(glfw3)
+    if (NOT glfw3_FOUND)
+        message(STATUS "--- Didn't find glfw3, will git clone then compile it")
+
+        include(ExternalProject)
+        set(EXTERNAL_INSTALL_LOCATION ${glfw3_ROOT})
+
+        ExternalProject_Add(glfw
+            GIT_REPOSITORY https://github.com/glfw/glfw.git
+            GIT_TAG "3.3.2"
+            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
+        )
+    else()
+        message(STATUS "--- Found glfw in ${glfw3_ROOT}")
+    endif()
 endif()
 
 add_library(smallcv
@@ -36,10 +55,15 @@ add_library(smallcv
 
 target_include_directories(smallcv PRIVATE "deps/stb")
 target_include_directories(smallcv PUBLIC "smallcv")
+
 if(SMALLCV_IMSHOW)
-    target_link_libraries(smallcv glfw)
     target_include_directories(smallcv PRIVATE "deps/imshow")
     target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMSHOW)
+
+    if (NOT glfw3_FOUND)
+        add_dependencies(smallcv glfw)
+    endif()
+    target_link_libraries(smallcv PUBLIC glfw)
 endif()
 
 

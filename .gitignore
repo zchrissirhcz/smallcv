@@ -11,3 +11,6 @@ mingren_swap.bmp
 
 # build
 build/vs2019-x64
+
+# glfw source
+deps/imshow/glfw
