@@ -1,6 +1,7 @@
 #include "mat.hpp"
 #include "improc_private.hpp"
 #include <assert.h>
+#include <string.h>
 
 namespace sv {
 

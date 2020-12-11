@@ -63,7 +63,10 @@ if(SMALLCV_IMSHOW)
     if (NOT glfw3_FOUND)
         add_dependencies(smallcv glfw)
     endif()
-    target_link_libraries(smallcv PUBLIC glfw)
+    target_link_libraries(smallcv INTERFACE glfw)
+
+    get_target_property(glfw_INCLUDE_DIR glfw INTERFACE_INCLUDE_DIRECTORIES)
+    target_include_directories(smallcv PRIVATE ${glfw_INCLUDE_DIR})
 endif()
 
 
