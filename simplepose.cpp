@@ -131,6 +131,7 @@ static void draw_pose(sv::Mat& image, const std::vector<KeyPoint>& keypoints)
 
     //sv::imshow("image", image);
     //sv::waitKey(0);
+    sv::rgb_bgr_swap_inplace(image);
     sv::imwrite("simplepose_result.bmp", image);
 }
 

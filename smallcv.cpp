@@ -13,6 +13,7 @@
 
 
 #include <assert.h>
+#include <cmath>
 
 
 namespace sv {
@@ -116,9 +117,115 @@ namespace sv {
         }
     }
 
+    static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color);
     void line(Mat& image, Point2i pt1, Point2i pt2, const Scalar& color, int thickness)
     {
-        
+        for (int i = -thickness; i <= thickness; i++) {
+            int x1 = pt1.x + i;
+            int y1 = pt1.y + i;
+            int x2 = pt2.x + i;
+            int y2 = pt2.y + i;
+            bressenhan_line(image, x1, y1, x2, y2, color);
+        }
+    }
+
+    void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color)
+    {
+        uchar* data = image.data.get();
+        int linebytes = image.get_width() * 3;
+        int v0 = color.get_v0();
+        int v1 = color.get_v1();
+        int v2 = color.get_v2();
+        // 参数 c 为颜色值
+        int dx = abs(x2 - x1),
+            dy = abs(y2 - y1),
+            yy = 0;
+
+        if (dx < dy) {
+            yy = 1;
+            std::swap(x1, y1);
+            std::swap(x2, y2);
+            std::swap(dx, dy);
+        }
+
+        int ix = (x2 - x1) > 0 ? 1 : -1,
+            iy = (y2 - y1) > 0 ? 1 : -1,
+            cx = x1,
+            cy = y1,
+            n2dy = dy * 2,
+            n2dydx = (dy - dx) * 2,
+            d = dy * 2 - dx;
+
+        if (yy) { // 如果直线与 x 轴的夹角大于 45 度
+            while (cx != x2) {
+                if (d < 0) {
+                    d += n2dy;
+                }
+                else {
+                    cy += iy;
+                    d += n2dydx;
+                }
+                //putpixel(img, cy, cx, c);
+                data[cx * linebytes + cy * 3] = v0;
+                data[cx * linebytes + cy * 3 + 1] = v1;
+                data[cx * linebytes + cy * 3 + 2] = v2;
+                cx += ix;
+            }
+        }
+        else { // 如果直线与 x 轴的夹角小于 45 度
+            while (cx != x2) {
+                if (d < 0) {
+                    d += n2dy;
+                }
+                else {
+                    cy += iy;
+                    d += n2dydx;
+                }
+                //putpixel(img, cx, cy, c);
+                data[cy * linebytes + cx * 3] = v0;
+                data[cy * linebytes + cx * 3 + 1] = v1;
+                data[cy * linebytes + cx * 3 + 2] = v2;
+                cx += ix;
+            }
+        }
+    }
+
+    void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & color)
+    {
+        uchar* data = image.data.get();
+        bool steep = false;
+        // if dx<dy, then swap them. We assume dx>dy and iterater according to dx
+        if (std::abs(x0 - x1) < std::abs(y0 - y1)) {
+            std::swap(x0, y0);
+            std::swap(x1, y1);
+            steep = true;
+        }
+        if (x0 > x1) {
+            std::swap(x0, x1);
+            std::swap(y0, y1);
+        }
+
+        int idx = 0;
+        int linebytes = image.get_width() * 3;
+        const int v0 = color.get_v0();
+        const int v1 = color.get_v1();
+        const int v2 = color.get_v2();
+        for (int x = x0; x <= x1; x++) {
+            float t = 1.0 * (x - x0) / (x1 - x0); // lambda
+            int y = y0 * (1.f - t) + y1 * t;
+            if (steep) {
+                //image[h=x,w=y] = color
+                data[x * linebytes + y * 3] = v0;
+                data[x * linebytes + y * 3 + 1] = v1;
+                data[x * linebytes + y * 3 + 2] = v2;
+            }
+            else {
+                //image[h=y,w=x] = color
+                data[y * linebytes + x * 3] = v0;
+                data[y * linebytes + x * 3 + 1] = v1;
+                data[y * linebytes + x * 3 + 2] = v2;
+            }
+        }
     }
 
     void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
@@ -130,7 +237,26 @@ namespace sv {
 
     void circle(Mat& image, Point2i center, int radius, const Scalar& color, int thickness)
     {
-        // TODO
+        int x0 = center.x - radius;
+        int y0 = center.y - radius;
+        int x1 = center.x + radius;
+        int y1 = center.y + radius;
+        uchar* data = image.data.get();
+        int linebytes = image.get_width() * 3;
+        int v0 = color.get_v0();
+        int v1 = color.get_v1();
+        int v2 = color.get_v2();
+        for (int y = y0; y <= y1; y++) {
+            for (int x = x0; x <= x1; x++) {
+                float dist = std::hypot(y - center.y, x - center.x);
+                if (dist <= radius) {
+                    // data[h=y,w=x] = color
+                    data[y * linebytes + x * 3] = v0;
+                    data[y * linebytes + x * 3 + 1] = v1;
+                    data[y * linebytes + x * 3 + 2] = v2;
+                }
+            }
+        }
     }
 
     void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)

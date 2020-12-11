@@ -108,6 +108,9 @@ namespace sv {
             v2 = s.v2;
             return *this;
         }
+        int get_v0() const { return v0; }
+        int get_v1() const { return v1; }
+        int get_v2() const { return v2; }
     private:
         int v0;
         int v1;
