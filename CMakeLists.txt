@@ -17,5 +17,9 @@ target_link_libraries(smallcv ncnn)
 add_executable(ncnn_squeezenet
     squeezenet.cpp
 )
-
 target_link_libraries(ncnn_squeezenet smallcv ncnn)
+
+add_executable(ncnn_squeezenet_c_api
+    squeezenet_c_api.cpp
+)
+target_link_libraries(ncnn_squeezenet_c_api smallcv ncnn)

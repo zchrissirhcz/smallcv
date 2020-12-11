@@ -1,6 +1,6 @@
 // Tencent is pleased to support the open source community by making ncnn available.
 //
-// Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
+// Copyright (C) 2020 THL A29 Limited, a Tencent company. All rights reserved.
 //
 // Licensed under the BSD 3-Clause License (the "License"); you may not use this file except
 // in compliance with the License. You may obtain a copy of the License at
@@ -18,42 +18,57 @@
 #include <vld.h>
 #endif
 
-#include "net.h"
 
+#include "c_api.h"
+
+#include <algorithm>
 #include <stdio.h>
 #include <vector>
-#include <algorithm>
-#include <assert.h>
 
 #include "smallcv.h"
 
 static int detect_squeezenet(const sv::Mat& bgr, std::vector<float>& cls_scores)
 {
-    ncnn::Net squeezenet;
+    ncnn_net_t squeezenet = ncnn_net_create();
 
-    squeezenet.opt.use_vulkan_compute = true;
+    ncnn_option_t opt = ncnn_option_create();
+    ncnn_option_set_use_vulkan_compute(opt, 1);
+
+    ncnn_net_set_option(squeezenet, opt);
 
     // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
-    squeezenet.load_param("squeezenet_v1.1.param");
-    squeezenet.load_model("squeezenet_v1.1.bin");
+    ncnn_net_load_param(squeezenet, "squeezenet_v1.1.param");
+    ncnn_net_load_model(squeezenet, "squeezenet_v1.1.bin");
 
-    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data.get(), ncnn::Mat::PIXEL_BGR, bgr.get_width(), bgr.get_height(), 227, 227);
+    ncnn_mat_t in = ncnn_mat_from_pixels_resize(bgr.data.get(), NCNN_MAT_PIXEL_BGR, bgr.get_width(), bgr.get_height(), bgr.get_width() * 3, 227, 227);
 
-    const float mean_vals[3] = { 104.f, 117.f, 123.f };
-    in.substract_mean_normalize(mean_vals, 0);
+    const float mean_vals[3] = {104.f, 117.f, 123.f};
+    ncnn_mat_substract_mean_normalize(in, mean_vals, 0);
 
-    ncnn::Extractor ex = squeezenet.create_extractor();
+    ncnn_extractor_t ex = ncnn_extractor_create(squeezenet);
 
-    ex.input("data", in);
+    ncnn_extractor_input(ex, "data", in);
 
-    ncnn::Mat out;
-    ex.extract("prob", out);
+    ncnn_mat_t out;
+    ncnn_extractor_extract(ex, "prob", &out);
 
-    cls_scores.resize(out.w);
-    for (int j = 0; j < out.w; j++)
+    const int out_w = ncnn_mat_get_w(out);
+    const float* out_data = (const float*)ncnn_mat_get_data(out);
+
+    cls_scores.resize(out_w);
+    for (int j = 0; j < out_w; j++)
     {
-        cls_scores[j] = out[j];
+        cls_scores[j] = out_data[j];
     }
+
+    ncnn_mat_destroy(in);
+    ncnn_mat_destroy(out);
+
+    ncnn_extractor_destroy(ex);
+
+    ncnn_option_destroy(opt);
+
+    ncnn_net_destroy(squeezenet);
 
     return 0;
 }
@@ -70,7 +85,7 @@ static int print_topk(const std::vector<float>& cls_scores, int topk)
     }
 
     std::partial_sort(vec.begin(), vec.begin() + topk, vec.end(),
-        std::greater<std::pair<float, int> >());
+                      std::greater<std::pair<float, int> >());
 
     // print topk and score
     for (int i = 0; i < topk; i++)
@@ -101,7 +116,6 @@ int main(int argc, char** argv)
             fprintf(stderr, "cv::imread %s failed\n", imagepath);
             return -1;
         }
-
         rgb_bgr_swap_inplace(m);
         std::vector<float> cls_scores;
         detect_squeezenet(m, cls_scores);
