@@ -32,24 +32,27 @@ if(SMALLCV_IMSHOW)
     #----------------------------------------
     #set(glfw3_ROOT "D:/lib/glfw/3.3/x64/vc15/lib/cmake/glfw3")
     set(glfw3_ROOT "${CMAKE_SOURCE_DIR}/deps/imshow/glfw")
-    find_package(glfw3)
+    find_package(glfw3 QUIET)
     if (NOT glfw3_FOUND)
         message(STATUS "--- Didn't find glfw3, will git clone then compile it")
 
         include(ExternalProject)
-        set(EXTERNAL_INSTALL_LOCATION ${glfw3_ROOT})
+        set(glfw3_INSTALL ${glfw3_ROOT})
 
-        ExternalProject_Add(glfw
+        ExternalProject_Add(glfw3
             GIT_REPOSITORY https://github.com/glfw/glfw.git
             GIT_TAG "3.3.2"
-            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
+            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${glfw3_INSTALL} -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
         )
+        set(glfw3_FOUND TRUE)
+        set(glfw3_INCLUDE_DIR ${glfw3_INSTALL}/include)
+        set(glfw3_EXTERNAL TRUE)
     else()
         message(STATUS "--- Found glfw in ${glfw3_ROOT}")
     endif()
 endif()
 
-add_library(smallcv
+add_library(smallcv STATIC
     ${smallcv_srcs}
 )
 
@@ -60,13 +63,25 @@ if(SMALLCV_IMSHOW)
     target_include_directories(smallcv PRIVATE "deps/imshow")
     target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMSHOW)
 
-    if (NOT glfw3_FOUND)
-        add_dependencies(smallcv glfw)
+    if (glfw3_EXTERNAL)
+        add_dependencies(smallcv glfw3)
+    else()
+        get_target_property(glfw3_INCLUDE_DIR glfw INTERFACE_INCLUDE_DIRECTORIES)
     endif()
-    target_link_libraries(smallcv INTERFACE glfw)
+    
+    if ( (NOT glfw3_FOUND) OR glfw3_EXTERNAL)
+        if (WIN32)
+            set(glfw3_LIBRARY "${glfw3_ROOT}/lib/glfw3.lib")
+        elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+            set(glfw3_LIBRARY "${glfw3_ROOT}/lib/libglfw3.a")
+        endif()
+        target_link_libraries(smallcv PUBLIC ${glfw3_LIBRARY})
+    else()
+        target_link_libraries(smallcv PUBLIC glfw)
+    endif()
+    target_include_directories(smallcv PUBLIC ${glfw3_INCLUDE_DIR})
 
-    get_target_property(glfw_INCLUDE_DIR glfw INTERFACE_INCLUDE_DIRECTORIES)
-    target_include_directories(smallcv PRIVATE ${glfw_INCLUDE_DIR})
+    #target_include_directories(smallcv PRIVATE ${glfw_INCLUDE_DIR})
 endif()
 
 
