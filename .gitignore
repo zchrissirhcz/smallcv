@@ -8,3 +8,6 @@ mingren_swap.bmp
 
 # IDE
 .vscode/
+
+# build
+build/vs2019-x64

@@ -30,7 +30,6 @@ namespace sv {
             size_t get_width() const { return width; }
             size_t get_channels() const { return channels; }
             bool empty() const;
-            Mat clone() const;
             
 
         // public data members
@@ -70,18 +69,13 @@ namespace sv {
     void imwrite(const char* filename, const sv::Mat& image);
     void imwrite(const std::string& save_path, const sv::Mat& image);
 
+    void rgb_bgr_swap_inplace(sv::Mat& image);
+
     template<typename _Tp> static inline
     Rect_<_Tp> operator& (const Rect_<_Tp>& a, const Rect_<_Tp>& b)
     {
         Rect_<_Tp> c = a;
         return c &= b;
-    }
-
-    inline Mat Mat::clone() const
-    {
-        Mat m;
-        copyTo(m);
-        return m;
     }
  
 }

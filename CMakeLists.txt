@@ -9,7 +9,13 @@ add_library(smallcv
     smallcv.cpp
 )
 
-set(ncnn_DIR "E:/lib/ncnn/master/lib/cmake/ncnn" CACHE PATH "folder that contains ncnnConfig.cmake")
+set(ncnn_DIR "E:/lib/ncnn/20201210/lib/cmake/ncnn" CACHE PATH "folder that contains ncnnConfig.cmake")
 find_package(ncnn REQUIRED)
 
 target_link_libraries(smallcv ncnn)
+
+add_executable(ncnn_squeezenet
+    squeezenet.cpp
+)
+
+target_link_libraries(ncnn_squeezenet smallcv ncnn)
