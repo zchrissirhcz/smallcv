@@ -116,7 +116,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "cv::imread %s failed\n", imagepath);
             return -1;
         }
-        rgb_bgr_swap_inplace(m);
+        sv::rgb_bgr_swap_inplace(m);
         std::vector<float> cls_scores;
         detect_squeezenet(m, cls_scores);
 

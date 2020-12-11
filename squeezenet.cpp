@@ -102,7 +102,7 @@ int main(int argc, char** argv)
             return -1;
         }
 
-        rgb_bgr_swap_inplace(m);
+        sv::rgb_bgr_swap_inplace(m);
         std::vector<float> cls_scores;
         detect_squeezenet(m, cls_scores);
 
