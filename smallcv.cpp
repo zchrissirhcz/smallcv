@@ -45,15 +45,15 @@ namespace sv {
         int width;
         int channels;
         unsigned char* raw_data = stbi_load(image_path, &width, &height, &channels, 0);
-        assert(raw_data!=NULL);
-        assert(channels==3); // TODO: support gray image and detect 4-channel RGBA image
+        assert(raw_data != NULL);
+        assert(channels == 3); // TODO: support gray image and detect 4-channel RGBA image
         Shape3d shape;
         shape.height = static_cast<size_t>(height);
         shape.width = static_cast<size_t>(width);
         shape.channels = static_cast<size_t>(channels);
         Mat image(shape);
         uchar* image_data = image.data.get();
-        size_t size = height * width * channels * sizeof(unsigned char);
+        size_t size = static_cast<size_t>(height * width * channels) * sizeof(unsigned char);
         memcpy(image_data, raw_data, size);
         free(raw_data);
 
@@ -75,17 +75,17 @@ namespace sv {
         int width = static_cast<int>(image.get_width());
         int height = static_cast<int>(image.get_height());
         uchar* data = image.data.get();
-        assert(image.get_channels()==3); // TODO: support gray image
-        assert(data!=NULL);
-        if (0==strcmp(ext, ".jpg")) {
+        assert(image.get_channels() == 3); // TODO: support gray image
+        assert(data != NULL);
+        if (0 == strcmp(ext, ".jpg")) {
             int quality = 100;
             stbi_write_jpg(filename, width, height, 3, data, quality);
         }
-        else if (0==strcmp(ext, ".png")) {
+        else if (0 == strcmp(ext, ".png")) {
             int stride_in_bytes = width * 3; // TODO: Mat may use line alignment
             stbi_write_png(filename, width, height, 3, data, stride_in_bytes);
         }
-        else if (0==strcmp(ext, ".bmp")) {
+        else if (0 == strcmp(ext, ".bmp")) {
             stbi_write_bmp(filename, width, height, 3, data);
         }
         else {
@@ -116,6 +116,28 @@ namespace sv {
         }
     }
 
+    void line(Mat& image, Point2i pt1, Point2i pt2, const Scalar& color, int thickness)
+    {
+        
+    }
+
+    void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
+    {
+        Point2i ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
+        Point2i ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
+        line(image, ipt1, ipt2, color, thickness);
+    }
+
+    void circle(Mat& image, Point2i center, int radius, const Scalar& color, int thickness)
+    {
+        // TODO
+    }
+
+    void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)
+    {
+        Point2i icenter(static_cast<int>(center.x), static_cast<int>(center.y));
+        circle(image, icenter, radius, color, thickness);
+    }
 
     template<typename _Tp>
     Rect_<_Tp>::Rect_(): 

@@ -64,12 +64,68 @@ namespace sv {
         _Tp height; // rect height
     };
 
+    class Point2i
+    {
+    public:
+        Point2i() :x(0), y(0) {}
+        Point2i(int _x, int _y) : x(_x), y(_y) {}
+        Point2i(const Point2i& p) : x(p.x), y(p.y) {}
+        Point2i& operator=(const Point2i& p) {
+            x = p.x;
+            y = p.y;
+            return *this;
+        }
+    public:
+        int x;
+        int y;
+    };
+
+    class Point2f 
+    {
+    public:
+        Point2f():x(0), y(0){}
+        Point2f(float _x, float _y): x(_x), y(_y){}
+        Point2f(const Point2f& p): x(p.x), y(p.y) {}
+        Point2f& operator=(const Point2f& p) {
+            x = p.x;
+            y = p.y;
+            return *this;
+        }
+    public:
+        float x;
+        float y;
+    };
+
+    class Scalar
+    {
+    public:
+        Scalar() :v0(0), v1(0), v2(0){}
+        Scalar(int _v0, int _v1, int _v2): v0(_v0), v1(_v1), v2(_v2){}
+        Scalar(const Scalar& s): v0(s.v0), v1(s.v1), v2(s.v2){}
+        Scalar& operator=(const Scalar& s) {
+            v0 = s.v0;
+            v1 = s.v1;
+            v2 = s.v2;
+            return *this;
+        }
+    private:
+        int v0;
+        int v1;
+        int v2;
+    };
+
     Mat imread(const char* image_path);
     Mat imread(const std::string& image_path);
     void imwrite(const char* filename, const sv::Mat& image);
     void imwrite(const std::string& save_path, const sv::Mat& image);
 
     void rgb_bgr_swap_inplace(sv::Mat& image);
+
+    void line(Mat& image, Point2i pt1, Point2i pt2, const Scalar& color, int thickness = 1);
+    void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness = 1);
+
+    void circle(Mat& image, Point2i center, int radius, const Scalar& color, int thickness = 1);
+    void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness = 1);
 
     template<typename _Tp> static inline
     Rect_<_Tp> operator& (const Rect_<_Tp>& a, const Rect_<_Tp>& b)

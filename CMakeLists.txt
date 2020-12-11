@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 project(smallcv)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 11)
 
 add_library(smallcv
     smallcv.h
@@ -28,3 +29,11 @@ add_executable(ncnn_shufflenetv2
     shufflenetv2.cpp
 )
 target_link_libraries(ncnn_shufflenetv2 smallcv ncnn)
+
+add_executable(ncnn_simplepose
+    simplepose.cpp
+)
+target_link_libraries(ncnn_simplepose smallcv ncnn)
+
+# TODO
+# Mat::clone()
