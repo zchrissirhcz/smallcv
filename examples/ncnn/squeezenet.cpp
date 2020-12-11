@@ -12,7 +12,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#define VLD
 
 #ifdef VLD
 #include <vld.h>
@@ -25,7 +24,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "smallcv.h"
+#include "smallcv.hpp"
 
 static int detect_squeezenet(const sv::Mat& bgr, std::vector<float>& cls_scores)
 {

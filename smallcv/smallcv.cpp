@@ -1,4 +1,4 @@
-#include "smallcv.h"
+#include "smallcv.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PSD

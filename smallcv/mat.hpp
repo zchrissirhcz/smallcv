@@ -1,5 +1,5 @@
-#ifndef SMALLCV_H
-#define SMALLCV_H
+#ifndef SMALLCV_MAT_HPP
+#define SMALLCV_MAT_HPP
 
 
 #include <stdio.h>

@@ -12,12 +12,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
+#ifdef VLD
+#include <vld.h>
+#endif
+
+
 #include "net.h"
 
 #include <algorithm>
 #include <stdio.h>
 #include <vector>
-#include "smallcv.h"
+#include "smallcv.hpp"
 
 struct KeyPoint
 {
@@ -129,34 +134,40 @@ static void draw_pose(sv::Mat& image, const std::vector<KeyPoint>& keypoints)
         sv::circle(image, keypoint.p, 3, sv::Scalar(0, 255, 0), -1);
     }
 
-    //sv::imshow("image", image);
-    //sv::waitKey(0);
+    sv::imshow("image", image);
+    sv::waitKey(0);
     sv::rgb_bgr_swap_inplace(image);
     sv::imwrite("simplepose_result.bmp", image);
 }
 
 int main(int argc, char** argv)
 {
-    //if (argc != 2)
-    //{
-    //    fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
-    //    return -1;
-    //}
-
-    //const char* imagepath = argv[1];
-    const char* imagepath = "000017.bmp";
-
-    sv::Mat m = sv::imread(imagepath);
-    if (m.empty())
     {
-        fprintf(stderr, "cv::imread %s failed\n", imagepath);
-        return -1;
-    }
-    sv::rgb_bgr_swap_inplace(m);
-    std::vector<KeyPoint> keypoints;
-    detect_posenet(m, keypoints);
+        //if (argc != 2)
+        //{
+        //    fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
+        //    return -1;
+        //}
 
-    draw_pose(m, keypoints);
+        //const char* imagepath = argv[1];
+        const char* imagepath = "000017.bmp";
+
+        sv::Mat m = sv::imread(imagepath);
+        if (m.empty())
+        {
+            fprintf(stderr, "cv::imread %s failed\n", imagepath);
+            return -1;
+        }
+        sv::rgb_bgr_swap_inplace(m);
+        std::vector<KeyPoint> keypoints;
+        detect_posenet(m, keypoints);
+
+        draw_pose(m, keypoints);
+    }
+
+#ifdef VLD
+    VLDReportLeaks();
+#endif
 
     return 0;
 }
