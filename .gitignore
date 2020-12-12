@@ -12,6 +12,7 @@ mingren_swap.bmp
 # build
 build/vs2019-x64
 build/linux-x64
+build/Xcode
 
 # glfw source
 deps/imshow/glfw

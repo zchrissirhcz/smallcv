@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 
 option(SMALLCV_IMSHOW "Provide imshow related functions" ON)
+option(SMALLCV_BUILD_NCNNEXAMPLES "Build ncnn examples?" ON)
 
 # check memory leak with VLD in Visual Studio
 # add_definitions(-DVLD)
@@ -30,7 +31,7 @@ if(SMALLCV_IMSHOW)
     #----------------------------------------
     # glfw
     #----------------------------------------
-    #set(glfw3_ROOT "D:/lib/glfw/3.3/x64/vc15/lib/cmake/glfw3")
+    set(glfw3_ROOT "D:/lib/glfw/3.3/x64/vc15/lib/cmake/glfw3")
     set(glfw3_ROOT "${CMAKE_SOURCE_DIR}/deps/imshow/glfw")
     find_package(glfw3 QUIET)
     if (NOT glfw3_FOUND)
@@ -39,16 +40,26 @@ if(SMALLCV_IMSHOW)
         include(ExternalProject)
         set(glfw3_INSTALL ${glfw3_ROOT})
 
-        ExternalProject_Add(glfw3
-            GIT_REPOSITORY https://github.com/glfw/glfw.git
-            GIT_TAG "3.3.2"
-            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${glfw3_INSTALL} -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
-        )
+        if (CMAKE_SYSTEM_NAME MATCHES "Windows" OR CMAKE_SYSTEM_NAME MATCHES "Linux")
+            ExternalProject_Add(glfw3
+                #GIT_REPOSITORY https://github.com/glfw/glfw.git
+                GIT_REPOSITORY https://gitee.com/mirrors/glfw.git
+                GIT_TAG "3.3.2"
+                CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${glfw3_INSTALL} -DBUILD_SHARED_LIBS=OFF -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
+            )
+        else (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+            ExternalProject_Add(glfw3
+                #GIT_REPOSITORY https://github.com/glfw/glfw.git
+                GIT_REPOSITORY https://gitee.com/mirrors/glfw.git
+                GIT_TAG "3.3.2"
+                CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${glfw3_INSTALL} -DBUILD_SHARED_LIBS=ON -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF
+            )
+        endif()
         set(glfw3_FOUND TRUE)
         set(glfw3_INCLUDE_DIR ${glfw3_INSTALL}/include)
         set(glfw3_EXTERNAL TRUE)
     else()
-        message(STATUS "--- Found glfw in ${glfw3_ROOT}")
+        message(STATUS "--- Found glfw, glfw3_DIR is ${glfw3_DIR}")
     endif()
 endif()
 
@@ -68,12 +79,16 @@ if(SMALLCV_IMSHOW)
     else()
         get_target_property(glfw3_INCLUDE_DIR glfw INTERFACE_INCLUDE_DIRECTORIES)
     endif()
-    
+
     if ( (NOT glfw3_FOUND) OR glfw3_EXTERNAL)
         if (WIN32)
             set(glfw3_LIBRARY "${glfw3_ROOT}/lib/glfw3.lib")
         elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
             set(glfw3_LIBRARY "${glfw3_ROOT}/lib/libglfw3.a")
+        elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+            set(glfw3_LIBRARY "${glfw3_ROOT}/lib/libglfw.dylib")
+        else()
+            message(FATAL_ERROR "! Please set glfw3_LIBRARY in CMakeLists.txt")
         endif()
         target_link_libraries(smallcv PUBLIC ${glfw3_LIBRARY})
     else()
@@ -96,6 +111,7 @@ target_link_libraries(basic_example smallcv)
 #----------------------------------------
 # ncnn examples
 #----------------------------------------
+if(SMALLCV_BUILD_NCNNEXAMPLES)
 set(ncnn_DIR "E:/lib/ncnn/20201210/lib/cmake/ncnn" CACHE PATH "folder that contains ncnnConfig.cmake")
 find_package(ncnn REQUIRED)
 
@@ -118,6 +134,7 @@ add_executable(ncnn_simplepose
     examples/ncnn/simplepose.cpp
 )
 target_link_libraries(ncnn_simplepose smallcv ncnn)
+endif()
 
 # TODO
 # Mat::clone()
