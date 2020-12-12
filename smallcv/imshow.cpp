@@ -33,6 +33,14 @@ void waitKey(int delay)
 #include "fc_log.h"
 //#define OFFSET 50
 
+#ifndef GLFW_TRUE
+#define GLFW_TRUE 1
+#endif
+
+#ifndef GLFW_FALSE
+#define GLFW_FALSE 0
+#endif
+
 namespace sv {
 // struct definitions and function implmentations
 //--------------------------------------------------
@@ -179,9 +187,9 @@ static void draw_quad(GLuint texture)
     glEnd();
 }
 
-static int fc_glfw_get_random(int a, int b) 
+static int fc_glfw_get_random(int a, int b)
 {
-    float t = rand() / (1 + RAND_MAX);
+    float t = rand() / (1.f + RAND_MAX);
     int res = t * (b - a) + a;
     return res;
 }
