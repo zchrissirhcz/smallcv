@@ -14,7 +14,7 @@
 
 #include <assert.h>
 #include <cmath>
-
+#include <limits>
 
 namespace sv {
     Mat::Mat(Shape3d shape)
@@ -136,7 +136,6 @@ namespace sv {
         int v0 = color.get_v0();
         int v1 = color.get_v1();
         int v2 = color.get_v2();
-        // 参数 c 为颜色值
         int dx = abs(x2 - x1),
             dy = abs(y2 - y1),
             yy = 0;
@@ -156,7 +155,7 @@ namespace sv {
             n2dydx = (dy - dx) * 2,
             d = dy * 2 - dx;
 
-        if (yy) { // 如果直线与 x 轴的夹角大于 45 度
+        if (yy) { // if angle between x axix and line segment is greater than 45 degrees
             while (cx != x2) {
                 if (d < 0) {
                     d += n2dy;
@@ -172,7 +171,7 @@ namespace sv {
                 cx += ix;
             }
         }
-        else { // 如果直线与 x 轴的夹角小于 45 度
+        else {  // if angle between x axix and line segment is less than 45 degrees
             while (cx != x2) {
                 if (d < 0) {
                     d += n2dy;
@@ -266,29 +265,29 @@ namespace sv {
     }
 
     template<typename _Tp>
-    Rect_<_Tp>::Rect_(): 
+    Rect_<_Tp>::Rect_():
         x(0), y(0), width(0), height(0)
     {
     }
 
     template<typename _Tp>
-    Rect_<_Tp>::Rect_(_Tp _x, _Tp _y, _Tp _width, _Tp _height): 
+    Rect_<_Tp>::Rect_(_Tp _x, _Tp _y, _Tp _width, _Tp _height):
         x(_x), y(_y), width(_width), height(_height)
     {
     }
 
     template<typename _Tp>
-    Rect_<_Tp>::Rect_(const Rect_<_Tp>& r): 
+    Rect_<_Tp>::Rect_(const Rect_<_Tp>& r):
         x(r.x), y(r.y), width(r.width), height(r.height)
     {
     }
 
     template<typename _Tp>
-    Rect_<_Tp>::Rect_(Rect_<_Tp>&& r) noexcept: 
+    Rect_<_Tp>::Rect_(Rect_<_Tp>&& r) noexcept:
         x(std::move(r.x)), y(std::move(r.y)), width(std::move(r.width)), height(std::move(r.height))
     {
     }
-    
+
     template<typename _Tp>
     Rect_<_Tp>& Rect_<_Tp>::operator= (const Rect_<_Tp>& r)
     {
@@ -321,3 +320,4 @@ namespace sv {
     }
 
 }
+
