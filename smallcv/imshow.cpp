@@ -198,8 +198,9 @@ void fc_glfw_show_image(const char* title, const Mat& im)
 {
     int x, y, width;
     srand(time(0));
-    int posX = fc_glfw_get_random(100, 1300);
-    int posY = fc_glfw_get_random(100, 1300);
+    // TODO: consider screen size
+    int posX = fc_glfw_get_random(100, 400);
+    int posY = fc_glfw_get_random(100, 400);
 
     //glfwSetErrorCallback(error_callback);
 

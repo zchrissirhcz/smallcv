@@ -34,7 +34,7 @@ static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
 {
     ncnn::Net posenet;
 
-    posenet.opt.use_vulkan_compute = true;
+    posenet.opt.use_vulkan_compute = false;
 
     // the simple baseline human pose estimation from gluon-cv
     // https://gluon-cv.mxnet.io/build/examples_pose/demo_simple_pose.html
