@@ -11,24 +11,30 @@ option(SMALLCV_NCNNEXAMPLES "Build ncnn examples?" ON)
 # check memory leak with VLD in Visual Studio
 # add_definitions(-DVLD)
 
-set(smallcv_srcs
+set(smallcv_api_files
   smallcv/smallcv.hpp
-  smallcv/smallcv.cpp
   smallcv/mat.hpp
+  smallcv/imdraw.hpp
+)
+
+set(smallcv_impl_files
+  smallcv/smallcv.cpp
   smallcv/fc_log.h
   smallcv/fc_log.c
   smallcv/improc_private.hpp
   smallcv/improc_private.cpp
+  smallcv/imdraw.cpp
 )
 
 if(SMALLCV_IMSHOW)
-  list(APPEND smallcv_srcs
+  list(APPEND smallcv_api_files
     smallcv/imshow.hpp
+  )
+  list(APPEND smallcv_impl_files
     smallcv/imshow.cpp
     deps/imshow/glad/glad.c
   )
-  set(glfw3_DIR "~/soft/glfw/lib/cmake/glfw3" CACHE PATH "Directory that contains glfw3Config.cmake")
-  find_package(glfw3 QUIET) # 3.3-stable recommended
+  find_package(glfw3 QUIET) # 3.3-stable branch recommended
   if(glfw3_FOUND)
     message(STATUS "[Found glfw3] glfw3_DIR is ${glfw3_DIR}")
   else()
@@ -53,7 +59,8 @@ if(SMALLCV_IMSHOW)
 endif()
 
 add_library(smallcv STATIC
-  ${smallcv_srcs}
+  ${smallcv_api_files}
+  ${smallcv_impl_files}
 )
 
 target_include_directories(smallcv PRIVATE "deps/stb")
@@ -77,20 +84,20 @@ target_link_libraries(basic_example smallcv)
 # ncnn examples
 #----------------------------------------
 if(SMALLCV_NCNNEXAMPLES)
-  find_package(ncnn QUIET) # >= 20200908
+  find_package(ncnn QUIET) # >= 20201218 recommended
   if(ncnn_FOUND)
     message(STATUS "[Found ncnn] ncnn_DIR is ${ncnn_DIR}")
   else()
     message(STATUS "[Not Found ncnn]")
     message(STATUS "Please remove cmake build cache, then:")
-    message(STATUS "* If already installed ncnn (version >= 20200908), please set ncnn_DIR in one of:")
+    message(STATUS "* If already installed ncnn (version >= 20201218), please set ncnn_DIR in one of:")
     message(STATUS "      file CMakeLists.txt, before `find_package(ncnn)`")
     message(STATUS "      file build/xxx.cache.cmake")
     message(STATUS "      file build/xxx.{sh,cmd}, with -Dncnn_DIR=/path/to/ncnnConfig.cmake")
     message(STATUS "      You may get inspired from build/xxx.cache.cmake :)")
     message(STATUS "* You may also build and install ncnn manually, e.g")
-    message(STATUS "      git clone https://gitee.com/mirrors/ncnn -b 20201208 ncnn20201208")
-    message(STATUS "      cd ncnn20201208 && mkdir build && cd build")
+    message(STATUS "      git clone https://gitee.com/mirrors/ncnn -b 20201218 ncnn20201218")
+    message(STATUS "      cd ncnn20201218 && mkdir build && cd build")
     message(STATUS "      cmake .. -DCMAKE_INSTALL_PREFIX=./install && cmake --build . && cmake --install .")
     message(STATUS "      then set ncnn_DIR before `find_package(ncnn)`")
     message(FATAL_ERROR "")
@@ -116,6 +123,11 @@ if(SMALLCV_NCNNEXAMPLES)
     examples/ncnn/simplepose.cpp
   )
   target_link_libraries(ncnn_simplepose smallcv ncnn)
+
+  # add_executable(ncnn_nanodet
+  #   examples/ncnn/nanodet.cpp
+  # )
+  # target_link_libraries(ncnn_nanodet smallcv ncnn)
 endif()
 
 # TODO
