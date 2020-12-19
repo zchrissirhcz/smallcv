@@ -118,7 +118,7 @@ namespace sv {
     }
 
     static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color);
-    void line(Mat& image, Point2i pt1, Point2i pt2, const Scalar& color, int thickness)
+    void line(Mat& image, Point2I pt1, Point2I pt2, const Scalar& color, int thickness)
     {
         for (int i = -thickness; i <= thickness; i++) {
             int x1 = pt1.x + i;
@@ -227,14 +227,14 @@ namespace sv {
         }
     }
 
-    void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
+    void line(Mat& image, Point2F pt1, Point2F pt2, const Scalar& color, int thickness)
     {
-        Point2i ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
-        Point2i ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
+        Point2I ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
+        Point2I ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
         line(image, ipt1, ipt2, color, thickness);
     }
 
-    void circle(Mat& image, Point2i center, int radius, const Scalar& color, int thickness)
+    void circle(Mat& image, Point2I center, int radius, const Scalar& color, int thickness)
     {
         int x0 = center.x - radius;
         int y0 = center.y - radius;
@@ -258,65 +258,10 @@ namespace sv {
         }
     }
 
-    void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)
+    void circle(Mat& image, Point2F center, int radius, const Scalar& color, int thickness)
     {
-        Point2i icenter(static_cast<int>(center.x), static_cast<int>(center.y));
+        Point2I icenter(static_cast<int>(center.x), static_cast<int>(center.y));
         circle(image, icenter, radius, color, thickness);
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>::Rect_():
-        x(0), y(0), width(0), height(0)
-    {
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>::Rect_(_Tp _x, _Tp _y, _Tp _width, _Tp _height):
-        x(_x), y(_y), width(_width), height(_height)
-    {
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>::Rect_(const Rect_<_Tp>& r):
-        x(r.x), y(r.y), width(r.width), height(r.height)
-    {
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>::Rect_(Rect_<_Tp>&& r) noexcept:
-        x(std::move(r.x)), y(std::move(r.y)), width(std::move(r.width)), height(std::move(r.height))
-    {
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>& Rect_<_Tp>::operator= (const Rect_<_Tp>& r)
-    {
-        x = r.x;
-        y = r.y;
-        width = r.width;
-        height = r.height;
-        return *this;
-    }
-
-    template<typename _Tp>
-    Rect_<_Tp>& Rect_<_Tp>::operator=(Rect_<_Tp>&& r) noexcept
-    {
-        x = std::move(r.x);
-        y = std::move(r.y);
-        width = std::move(r.width);
-        height = std::move(r.height);
-        return *this;
-    }
-
-    template<typename _Tp>
-    _Tp Rect_<_Tp>::area() const
-    {
-        const _Tp result = width * height;
-
-        // make sure result fits in the return value
-        assert(!std::numeric_limits<_Tp>::is_integer
-               || width == 0 || result / width == height);
-        return result;
     }
 
 }

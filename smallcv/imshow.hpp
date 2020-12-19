@@ -9,6 +9,6 @@ void imshow(const char* winname, const Mat& im);
 
 void waitKey(int milli_secs);
 
-} // namespace fc
+} // namespace sv
 
 #endif
