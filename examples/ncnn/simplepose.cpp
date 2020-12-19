@@ -26,7 +26,7 @@
 
 struct KeyPoint
 {
-    sv::Point2f p;
+    sv::Point2F p;
     float prob;
 };
 
@@ -92,7 +92,7 @@ static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
         }
 
         KeyPoint keypoint;
-        keypoint.p = sv::Point2f(max_x * w / (float)out.w, max_y * h / (float)out.h);
+        keypoint.p = sv::Point2F(max_x * w / (float)out.w, max_y * h / (float)out.h);
         keypoint.prob = max_prob;
 
         keypoints.push_back(keypoint);

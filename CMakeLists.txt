@@ -124,10 +124,10 @@ if(SMALLCV_NCNNEXAMPLES)
   )
   target_link_libraries(ncnn_simplepose smallcv ncnn)
 
-  add_executable(ncnn_nanodet
-    examples/ncnn/nanodet.cpp
-  )
-  target_link_libraries(ncnn_nanodet smallcv ncnn)
+  # add_executable(ncnn_nanodet
+  #   examples/ncnn/nanodet.cpp
+  # )
+  # target_link_libraries(ncnn_nanodet smallcv ncnn)
 endif()
 
 # TODO
