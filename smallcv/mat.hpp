@@ -175,12 +175,6 @@ namespace sv {
 
     void rgb_bgr_swap_inplace(sv::Mat& image);
 
-    void line(Mat& image, Point2I pt1, Point2I pt2, const Scalar& color, int thickness = 1);
-    void line(Mat& image, Point2F pt1, Point2F pt2, const Scalar& color, int thickness = 1);
-
-    void circle(Mat& image, Point2I center, int radius, const Scalar& color, int thickness = 1);
-    void circle(Mat& image, Point2F center, int radius, const Scalar& color, int thickness = 1);
-
     // template<typename _Tp> static inline
     // Rect_<_Tp> operator& (const Rect_<_Tp>& a, const Rect_<_Tp>& b)
     // {
