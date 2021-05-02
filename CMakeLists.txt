@@ -7,6 +7,14 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(SMALLCV_IMSHOW "Provide imshow related functions?" ON)
 option(SMALLCV_NCNNEXAMPLES "Build ncnn examples?" ON)
+option(USE_ASAN "use address sanitizer?" OFF)
+
+if (USE_ASAN)
+  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+  set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+endif()
 
 # check memory leak with VLD in Visual Studio
 # add_definitions(-DVLD)
@@ -124,6 +132,23 @@ if(SMALLCV_NCNNEXAMPLES)
   )
   target_link_libraries(ncnn_simplepose smallcv ncnn)
 
+  set(file_lst
+    000017.bmp 000017.jpg mingren.jpg
+    pose.bin pose.param
+    shufflenet_v2_x0.5-opt.bin shufflenet_v2_x0.5-opt.param
+    squeezenet_v1.1.bin squeezenet_v1.1.param
+    squeezenet_v1.1.param.bin squeezenet_v1.1.prototxt
+  )
+  #string(REPLACE ";" " " file_lst ${file_lst})
+  #message(FATAL_ERROR "--- file_lst: ${file_lst}")
+  foreach(file ${file_lst})
+    message(STATUS "--- copy file: ${file}")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E copy
+      ${CMAKE_SOURCE_DIR}/assets/${file}
+      ${CMAKE_BINARY_DIR}
+    )
+  endforeach()
   # add_executable(ncnn_nanodet
   #   examples/ncnn/nanodet.cpp
   # )

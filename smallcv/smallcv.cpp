@@ -17,12 +17,11 @@
 #include <limits>
 
 namespace sv {
-    Mat::Mat(Shape3d shape)
+    Mat::Mat(Shape3d shape):
+        height(shape.height), width(shape.width), channels(shape.channels),
+        data(nullptr)
     {
-        height = shape.height;
-        width = shape.width;
-        channels = shape.channels;
-        size_t size = height * width * channels * sizeof(unsigned char);
+        size_t size = height * width * channels;
         data.reset(new uchar[size], [](uchar* p) {
             delete[] p;
         });
