@@ -148,20 +148,13 @@ namespace sv {
     class Scalar
     {
     public:
-        Scalar() :v0(0), v1(0), v2(0){}
-        Scalar(int _v0, int _v1, int _v2): v0(_v0), v1(_v1), v2(_v2){}
-        Scalar(const Scalar& s): v0(s.v0), v1(s.v1), v2(s.v2){}
-        Scalar& operator=(const Scalar& s) {
-            if (this!=&s) {
-                v0 = s.v0;
-                v1 = s.v1;
-                v2 = s.v2;
-            }
-            return *this;
-        }
-        int get_v0() const { return v0; }
-        int get_v1() const { return v1; }
-        int get_v2() const { return v2; }
+        Scalar();
+        Scalar(int _v0, int _v1, int _v2);
+        Scalar(const Scalar& s);
+        Scalar& operator=(const Scalar& s);
+        int get_v0() const;
+        int get_v1() const;
+        int get_v2() const;
     private:
         int v0;
         int v1;

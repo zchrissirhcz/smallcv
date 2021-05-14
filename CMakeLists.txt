@@ -33,6 +33,7 @@ set(smallcv_impl_files
   smallcv/impl/improc_private.hpp
   smallcv/impl/improc_private.cpp
   smallcv/impl/imdraw.cpp
+  smallcv/impl/scalar.cpp
 )
 
 if(SMALLCV_IMSHOW)
