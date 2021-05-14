@@ -1,5 +1,5 @@
-#ifndef SMALLCV_MAT_HPP
-#define SMALLCV_MAT_HPP
+#ifndef SMALLCV_API_MAT_HPP
+#define SMALLCV_API_MAT_HPP
 
 
 #include <stdio.h>
@@ -26,9 +26,9 @@ namespace sv {
         public:
             Mat(Shape3d shape);
             ~Mat();
-            size_t get_height() const { return height; }
-            size_t get_width() const { return width; }
-            size_t get_channels() const { return channels; }
+            size_t get_height() const;
+            size_t get_width() const;
+            size_t get_channels() const;
             bool empty() const;
             
 
@@ -185,4 +185,4 @@ namespace sv {
 }
 
 
-#endif
+#endif // SMALLCV_API_MAT_HPP

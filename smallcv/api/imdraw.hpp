@@ -1,5 +1,5 @@
-#ifndef SMALLCV_IMDRAW_H
-#define SMALLCV_IMDRAW_H
+#ifndef SMALLCV_API_IMDRAW_H
+#define SMALLCV_API_IMDRAW_H
 
 #include "mat.hpp"
 
@@ -15,4 +15,4 @@ namespace sv {
 
 }
 
-#endif
+#endif // SMALLCV_API_IMDRAW_H

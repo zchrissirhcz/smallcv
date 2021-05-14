@@ -1,5 +1,5 @@
-#ifndef SMALLCV_IMSHOW_HPP
-#define SMALLCV_IMSHOW_HPP
+#ifndef SMALLCV_API_IMSHOW_HPP
+#define SMALLCV_API_IMSHOW_HPP
 
 #include "mat.hpp"
 
@@ -11,4 +11,4 @@ void waitKey(int milli_secs);
 
 } // namespace sv
 
-#endif
+#endif // SMALLCV_API_IMSHOW_HPP

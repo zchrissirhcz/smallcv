@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "smallcv.hpp"
+#include "smallcv/api/smallcv.hpp"
 
 static int detect_squeezenet(const sv::Mat& bgr, std::vector<float>& cls_scores)
 {

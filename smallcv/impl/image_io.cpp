@@ -1,4 +1,4 @@
-#include "smallcv.hpp"
+#include "smallcv/api/smallcv.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PSD
@@ -17,26 +17,6 @@
 #include <limits>
 
 namespace sv {
-    Mat::Mat(Shape3d shape):
-        height(shape.height), width(shape.width), channels(shape.channels),
-        data(nullptr)
-    {
-        size_t size = height * width * channels;
-        data.reset(new uchar[size], [](uchar* p) {
-            delete[] p;
-        });
-    }
-
-    Mat::~Mat()
-    {
-        data.reset();
-    }
-
-    bool Mat::empty() const
-    {
-        return data == nullptr;
-    }
-
 
     Mat imread(const char* image_path)
     {

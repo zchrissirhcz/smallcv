@@ -1,5 +1,5 @@
-#ifndef SMALLCV_HPP
-#define SMALLCV_HPP
+#ifndef SMALLCV_API_HPP
+#define SMALLCV_API_HPP
 
 
 #include "mat.hpp"

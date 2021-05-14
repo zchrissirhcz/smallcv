@@ -1,4 +1,4 @@
-#include "imshow.hpp"
+#include "smallcv/api/imshow.hpp"
 #include "improc_private.hpp"
 
 namespace sv {

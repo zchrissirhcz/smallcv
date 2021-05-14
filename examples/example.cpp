@@ -4,7 +4,7 @@
 #endif
 
 #include <string>
-#include "smallcv.hpp"
+#include "smallcv/api/smallcv.hpp"
 
 int main() {
     {

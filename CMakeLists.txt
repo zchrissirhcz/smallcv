@@ -20,26 +20,27 @@ endif()
 # add_definitions(-DVLD)
 
 set(smallcv_api_files
-  smallcv/smallcv.hpp
-  smallcv/mat.hpp
-  smallcv/imdraw.hpp
+  smallcv/api/smallcv.hpp
+  smallcv/api/mat.hpp
+  smallcv/api/imdraw.hpp
 )
 
 set(smallcv_impl_files
-  smallcv/smallcv.cpp
-  smallcv/fc_log.h
-  smallcv/fc_log.c
-  smallcv/improc_private.hpp
-  smallcv/improc_private.cpp
-  smallcv/imdraw.cpp
+  smallcv/impl/image_io.cpp
+  smallcv/impl/mat.cpp
+  smallcv/impl/fc_log.h
+  smallcv/impl/fc_log.c
+  smallcv/impl/improc_private.hpp
+  smallcv/impl/improc_private.cpp
+  smallcv/impl/imdraw.cpp
 )
 
 if(SMALLCV_IMSHOW)
   list(APPEND smallcv_api_files
-    smallcv/imshow.hpp
+  smallcv/api/imshow.hpp
   )
   list(APPEND smallcv_impl_files
-    smallcv/imshow.cpp
+    smallcv/impl/imshow.cpp
     deps/imshow/glad/glad.c
   )
   find_package(glfw3 QUIET) # 3.3-stable branch recommended
@@ -71,8 +72,10 @@ add_library(smallcv STATIC
   ${smallcv_impl_files}
 )
 
-target_include_directories(smallcv PRIVATE "deps/stb")
-target_include_directories(smallcv PUBLIC "smallcv")
+target_include_directories(smallcv 
+  PRIVATE "deps/stb"
+  PUBLIC ${CMAKE_SOURCE_DIR}
+)
 if(SMALLCV_IMSHOW)
   target_link_libraries(smallcv glfw)
   target_include_directories(smallcv PRIVATE "deps/imshow")
