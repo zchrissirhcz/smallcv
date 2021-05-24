@@ -28,6 +28,12 @@ Mat::Mat(Shape3d shape):
     });
 }
 
+Mat::Mat(Shape3d shape, uchar* _data)
+    : height(shape.height), width(shape.width), channels(shape.channels)
+{
+    data.reset(_data, [](uchar* p) { } );
+}
+
 Mat::~Mat()
 {
     data.reset();

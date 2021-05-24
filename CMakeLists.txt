@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(SMALLCV_IMSHOW "Provide imshow related functions?" ON)
 option(SMALLCV_NCNNEXAMPLES "Build ncnn examples?" ON)
-option(USE_ASAN "use address sanitizer?" OFF)
+option(USE_ASAN "use address sanitizer?" ON)
 
 if (USE_ASAN)
   set(CMAKE_BUILD_TYPE "Debug")
@@ -161,3 +161,10 @@ endif()
 
 # TODO
 # Mat::clone()
+
+
+#---- test
+add_executable(test_mat
+  smallcv/test/test_mat.cpp
+)
+target_link_libraries(test_mat smallcv)
