@@ -4,21 +4,19 @@ int main() {
     // test memory leak/double free
     {
         unsigned char* data = new unsigned char[300];
-        sv::Shape3d shape;
-        shape.height = 10;
-        shape.width = 10;
-        shape.channels = 3;
-        sv::Mat mat(shape, data);
+        cv::Size size;
+        size.height = 10;
+        size.width = 10;
+        cv::Mat mat(size, CV_8UC3, data);
 
         delete[] data;
     }
 
     {
-        sv::Shape3d shape;
-        shape.height = 10;
-        shape.width = 10;
-        shape.channels = 3;
-        sv::Mat mat(shape);
+        cv::Size size;
+        size.height = 10;
+        size.width = 10;
+        cv::Mat mat(size, CV_8UC3);
     }
 
     return 0;

@@ -3,7 +3,7 @@
 
 #include "mat.hpp"
 
-namespace sv {
+namespace cv {
 
 void imshow(const char* winname, const Mat& im);
 

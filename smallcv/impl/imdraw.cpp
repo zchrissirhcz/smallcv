@@ -1,7 +1,7 @@
 #include "smallcv/api/imdraw.hpp"
 #include <cmath>
 
-namespace sv {
+namespace cv {
 
 //----------------------------------------
 // static function declarations

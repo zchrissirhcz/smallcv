@@ -3,7 +3,7 @@
 
 
 #include "mat.hpp"
-#include "imdraw.hpp"
+//#include "imdraw.hpp"
 
 #ifdef SMALLCV_IMSHOW
 #include "imshow.hpp"
