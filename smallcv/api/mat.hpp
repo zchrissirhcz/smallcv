@@ -98,6 +98,46 @@ enum {
 
 void cvtColor(Mat src, Mat dst, int flag);
 
+template<typename T>
+class Scalar_
+{
+public:
+    Scalar_() {
+        val[0] = val[1] = val[2] = val[3] = 0;
+    }
+    Scalar_(T v0, T v1, T v2=0, T v3=0) {
+        val[0] = v0;
+        val[1] = v1;
+        val[2] = v2;
+        val[3] = v3;
+    }
+    Scalar_(T v0) {
+        val[0] = v0;
+        val[1] = val[2] = val[3] = 0;
+    }
+
+    Scalar_(const Scalar_& s) {
+        val[0] = s.val[0];
+        val[1] = s.val[1];
+        val[2] = s.val[2];
+        val[3] = s.val[3];
+    }
+    Scalar_& operator=(const Scalar_& s) {
+        if (this!=&s) {
+            val[0] = s.val[0];
+            val[1] = s.val[1];
+            val[2] = s.val[2];
+            val[3] = s.val[3];
+        }
+        return *this;
+    }
+
+public:
+    T val[4];
+};
+
+typedef Scalar_<double> Scalar;
+
 }
 
 
