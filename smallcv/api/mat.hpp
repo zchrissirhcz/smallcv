@@ -138,6 +138,54 @@ public:
 
 typedef Scalar_<double> Scalar;
 
+
+template<class T> class Rect_
+{
+public:
+    Rect_(): x(0), y(0), width(0), height(0) {}
+    Rect_(T _x, T _y, T _width, T _height): x(_x), y(_y), width(_width), height(_height) {}
+    Rect_(const Rect_& r): x(r.x), y(r.y), width(r.width), height(r.height) {}
+    Rect_& operator=(const Rect_& r) {
+        if (this!=&r) {
+            x = r.x;
+            y = r.y;
+            width = r.width;
+            height = r.height;
+        }
+        return *this;
+    }
+    int area() const {
+        int result = width * height;
+        return result;
+    }
+
+public:
+    T x;      // top-left, x coordinate
+    T y;      // top-left, y coordinate
+    T width;  // rect width
+    T height; // rect height
+};
+
+typedef Rect_<int> Rect2i;
+typedef Rect_<float> Rect2f;
+typedef Rect_<double> Rect2d;
+typedef Rect2i Rect;
+
+
+//---------- drawing functions
+void line(Mat& image, Point pt1, Point pt2, const Scalar& color, int thickness = 1);
+void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness = 1);
+
+void circle(Mat& image, Point center, int radius, const Scalar& color, int thickness = 1);
+void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness = 1);
+
+void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness=1);
+
+//---------- display functions
+void imshow(const char* winname, const Mat& im);
+void waitKey(int milli_secs);
+
+
 }
 
 

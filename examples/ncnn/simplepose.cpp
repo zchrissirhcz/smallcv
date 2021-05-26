@@ -136,7 +136,7 @@ static void draw_pose(cv::Mat& image, const std::vector<KeyPoint>& keypoints)
 
     cv::imshow("image", image);
     cv::waitKey(0);
-    cv::rgb_bgr_swap_inplace(image);
+    //cv::rgb_bgr_swap_inplace(image);
     cv::imwrite("simplepose_result.bmp", image);
 }
 
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
             fprintf(stderr, "cv::imread %s failed\n", imagepath);
             return -1;
         }
-        cv::rgb_bgr_swap_inplace(m);
+        //cv::rgb_bgr_swap_inplace(m);
         std::vector<KeyPoint> keypoints;
         detect_posenet(m, keypoints);
 

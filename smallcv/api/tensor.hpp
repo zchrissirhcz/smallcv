@@ -158,10 +158,10 @@ private:
 
 Mat imread(const char* image_path);
 Mat imread(const std::string& image_path);
-void imwrite(const char* filename, const sv::Mat& image);
-void imwrite(const std::string& save_path, const sv::Mat& image);
+void imwrite(const char* filename, const cv::Mat& image);
+void imwrite(const std::string& save_path, const cv::Mat& image);
 
-void rgb_bgr_swap_inplace(sv::Mat& image);
+void rgb_bgr_swap_inplace(cv::Mat& image);
 
 // template<typename _Tp> static inline
 // Rect_<_Tp> operator& (const Rect_<_Tp>& a, const Rect_<_Tp>& b)

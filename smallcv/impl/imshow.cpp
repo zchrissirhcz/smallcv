@@ -1,7 +1,7 @@
-#include "smallcv/api/imshow.hpp"
+#include "smallcv/api/mat.hpp"
 #include "improc_private.hpp"
 
-namespace sv {
+namespace cv {
 
 static void fc_glfw_show_image(const char* title, const Mat& im);
 static void fc_glfw_wait_key(int decay); // milliseconds
@@ -41,7 +41,7 @@ void waitKey(int delay)
 #define GLFW_FALSE 0
 #endif
 
-namespace sv {
+namespace cv {
 // struct definitions and function implmentations
 //--------------------------------------------------
 //GLFWwindow* window = NULL;
@@ -136,18 +136,17 @@ static unsigned int create_texture(const Mat& im)
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    Shape3d shape;
-    shape.height = im.get_height();
-    shape.width = im.get_width();
-    shape.channels = 3;
-    Mat im_upsd(shape);
+    Size size;
+    size.height = im.rows;
+    size.width = im.cols;
+    Mat im_upsd(size, CV_8UC3);
     image_upside_down(im, im_upsd);
 
     //TODO: set alignment here
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //glPixelStorei(GL_UNPACK_ALIGNMENT, im->align);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 256, 256, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.get_width(), im_upsd.get_height(), 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.cols, im_upsd.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -213,7 +212,7 @@ void fc_glfw_show_image(const char* title, const Mat& im)
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     }
 
-    FcGlfwWindow* win = fc_glfw_get_window(title, im.get_width(), im.get_height());
+    FcGlfwWindow* win = fc_glfw_get_window(title, im.cols, im.rows);
 
     glfwMakeContextCurrent(win->glfw_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);

@@ -5,7 +5,7 @@ project(smallcv)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 
-option(SMALLCV_IMSHOW "Provide imshow related functions?" OFF)
+option(SMALLCV_IMSHOW "Provide imshow related functions?" ON)
 option(SMALLCV_NCNNEXAMPLES "Build ncnn examples?" ON)
 option(USE_ASAN "use address sanitizer?" ON)
 
@@ -29,9 +29,9 @@ set(smallcv_impl_files
   smallcv/impl/image_io.cpp
   smallcv/impl/mat.cpp
   #smallcv/impl/fc_log.h
-  #smallcv/impl/fc_log.c
+  smallcv/impl/fc_log.c
   #smallcv/impl/improc_private.hpp
-  #smallcv/impl/improc_private.cpp
+  smallcv/impl/improc_private.cpp
   smallcv/impl/imdraw.cpp
   #smallcv/impl/scalar.cpp
 )
