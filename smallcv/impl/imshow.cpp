@@ -1,7 +1,7 @@
 #include "imshow.hpp"
 #include "improc_private.hpp"
 
-namespace sv {
+namespace cv {
 
 static void fc_glfw_show_image(const char* title, const Mat& im);
 static void fc_glfw_wait_key(int decay); // milliseconds
@@ -17,7 +17,7 @@ void waitKey(int delay)
     fc_glfw_wait_key(delay);
 }
 
-} // namespace sv
+} // namespace cv
 
 
 //modified from: https://www.cnblogs.com/charlee44/p/5745127.html
@@ -33,6 +33,7 @@ void waitKey(int delay)
 #include "fc_log.h"
 //#define OFFSET 50
 
+// compatible with older GLFW
 #ifndef GLFW_TRUE
 #define GLFW_TRUE 1
 #endif
@@ -41,7 +42,7 @@ void waitKey(int delay)
 #define GLFW_FALSE 0
 #endif
 
-namespace sv {
+namespace cv {
 // struct definitions and function implmentations
 //--------------------------------------------------
 //GLFWwindow* window = NULL;
@@ -136,18 +137,17 @@ static unsigned int create_texture(const Mat& im)
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    Shape3d shape;
-    shape.height = im.get_height();
-    shape.width = im.get_width();
-    shape.channels = 3;
-    Mat im_upsd(shape);
+    Size size;
+    size.height = im.rows;
+    size.width = im.cols;
+    Mat im_upsd(size, CV_8UC3);
     image_upside_down(im, im_upsd);
 
     //TODO: set alignment here
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //glPixelStorei(GL_UNPACK_ALIGNMENT, im->align);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 256, 256, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.get_width(), im_upsd.get_height(), 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.cols, im_upsd.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -187,9 +187,9 @@ static void draw_quad(GLuint texture)
     glEnd();
 }
 
-static int fc_glfw_get_random(int a, int b)
+static inline int fc_glfw_get_random(int a, int b)
 {
-    float t = rand() / (1.f + RAND_MAX);
+    float t = rand() / (1.f + static_cast<float>(RAND_MAX));
     int res = t * (b - a) + a;
     return res;
 }
@@ -213,7 +213,7 @@ void fc_glfw_show_image(const char* title, const Mat& im)
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     }
 
-    FcGlfwWindow* win = fc_glfw_get_window(title, im.get_width(), im.get_height());
+    FcGlfwWindow* win = fc_glfw_get_window(title, im.cols, im.rows);
 
     glfwMakeContextCurrent(win->glfw_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -365,5 +365,5 @@ int fc_glfw_imshow_test_main(void)
 //  return 0;
 //}
 
-} // namespace sv
+} // namespace cv
 

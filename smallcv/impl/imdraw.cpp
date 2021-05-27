@@ -1,7 +1,7 @@
 #include "imdraw.hpp"
 #include <cmath>
 
-namespace sv {
+namespace cv {
 
 //----------------------------------------
 // static function declarations
@@ -12,7 +12,7 @@ static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Sc
 //----------------------------------------
 // function implementations
 //----------------------------------------
-void line(Mat& image, Point2I pt1, Point2I pt2, const Scalar& color, int thickness)
+void line(Mat& image, Point pt1, Point pt2, const Scalar& color, int thickness)
 {
     for (int i = -thickness; i <= thickness; i++) {
         int x1 = pt1.x + i;
@@ -25,11 +25,11 @@ void line(Mat& image, Point2I pt1, Point2I pt2, const Scalar& color, int thickne
 
 void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color)
 {
-    uchar* data = image.data.get();
-    int linebytes = image.get_width() * 3;
-    int v0 = color.get_v0();
-    int v1 = color.get_v1();
-    int v2 = color.get_v2();
+    uchar* data = image.data;
+    int linebytes = image.cols * 3;
+    int v0 = color.val[0];
+    int v1 = color.val[1];
+    int v2 = color.val[2];
     int dx = abs(x2 - x1),
         dy = abs(y2 - y1),
         yy = 0;
@@ -85,7 +85,7 @@ void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& c
 
 void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & color)
 {
-    uchar* data = image.data.get();
+    uchar* data = image.data;
     bool steep = false;
     // if dx<dy, then swap them. We assume dx>dy and iterater according to dx
     if (std::abs(x0 - x1) < std::abs(y0 - y1)) {
@@ -99,10 +99,10 @@ void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & colo
     }
 
     int idx = 0;
-    int linebytes = image.get_width() * 3;
-    const int v0 = color.get_v0();
-    const int v1 = color.get_v1();
-    const int v2 = color.get_v2();
+    int linebytes = image.cols * 3;
+    const int v0 = color.val[0];
+    const int v1 = color.val[1];
+    const int v2 = color.val[2];
     for (int x = x0; x <= x1; x++) {
         float t = 1.0 * (x - x0) / (x1 - x0); // lambda
         int y = y0 * (1.f - t) + y1 * t;
@@ -121,24 +121,24 @@ void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & colo
     }
 }
 
-void line(Mat& image, Point2F pt1, Point2F pt2, const Scalar& color, int thickness)
+void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
 {
-    Point2I ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
-    Point2I ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
+    Point ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
+    Point ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
     line(image, ipt1, ipt2, color, thickness);
 }
 
-void circle(Mat& image, Point2I center, int radius, const Scalar& color, int thickness)
+void circle(Mat& image, Point center, int radius, const Scalar& color, int thickness)
 {
     int x0 = center.x - radius;
     int y0 = center.y - radius;
     int x1 = center.x + radius;
     int y1 = center.y + radius;
-    uchar* data = image.data.get();
-    int linebytes = image.get_width() * 3;
-    int v0 = color.get_v0();
-    int v1 = color.get_v1();
-    int v2 = color.get_v2();
+    uchar* data = image.data;
+    int linebytes = image.cols * 3;
+    int v0 = color.val[0];
+    int v1 = color.val[1];
+    int v2 = color.val[2];
     for (int y = y0; y <= y1; y++) {
         for (int x = x0; x <= x1; x++) {
             float dist = std::hypot(y - center.y, x - center.x);
@@ -152,20 +152,20 @@ void circle(Mat& image, Point2I center, int radius, const Scalar& color, int thi
     }
 }
 
-void circle(Mat& image, Point2F center, int radius, const Scalar& color, int thickness)
+void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)
 {
-    Point2I icenter(static_cast<int>(center.x), static_cast<int>(center.y));
+    Point icenter(static_cast<int>(center.x), static_cast<int>(center.y));
     circle(image, icenter, radius, color, thickness);
 }
 
 static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color)
 {
-    int channels = im.get_channels();
-    int linebytes = im.get_width() * channels;
-    uchar* data = im.data.get();
-    uchar b = static_cast<uchar>(color.get_v0());
-    uchar g = static_cast<uchar>(color.get_v1());
-    uchar r = static_cast<uchar>(color.get_v2());
+    int channels = im.channels();
+    int linebytes = im.cols * channels;
+    uchar* data = im.data;
+    uchar b = static_cast<uchar>(color.val[0]);
+    uchar g = static_cast<uchar>(color.val[1]);
+    uchar r = static_cast<uchar>(color.val[2]);
     for (int h=dy1; h<=dy2; h++) {
         for (int w=dx1; w<=dx2; w++) {
             int idx = h*linebytes + w*channels;
@@ -176,14 +176,14 @@ static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const S
     }
 }
 
-void rectangle(Mat& im, const RectI& rect, const Scalar color, int thickness)
+void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness)
 {
-    int image_height = im.get_height();
-    int image_width = im.get_width();
+    int image_height = im.rows;
+    int image_width = im.cols;
     int x1 = rect.x;
     int y1 = rect.y;
-    int x2 = rect.x2();
-    int y2 = rect.y2();
+    int x2 = x1 + rect.width - 1;
+    int y2 = y1 + rect.height - 1;
     
     if (x1>image_width-1 || y1>image_height-1 || x2<0 || y2<0 || x1>x2 || y1>y2) {
         return;

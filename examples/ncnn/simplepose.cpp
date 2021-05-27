@@ -26,11 +26,11 @@
 
 struct KeyPoint
 {
-    sv::Point2F p;
+    cv::Point2f p;
     float prob;
 };
 
-static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
+static int detect_posenet(const cv::Mat& bgr, std::vector<KeyPoint>& keypoints)
 {
     ncnn::Net posenet;
 
@@ -46,10 +46,10 @@ static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
     posenet.load_param("pose.param");
     posenet.load_model("pose.bin");
 
-    int w = bgr.get_width();
-    int h = bgr.get_height();
+    int w = bgr.cols;
+    int h = bgr.rows;
 
-    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data.get(), ncnn::Mat::PIXEL_BGR2RGB, w, h, 192, 256);
+    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR2RGB, w, h, 192, 256);
 
     // transforms.ToTensor(),
     // transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
@@ -92,7 +92,7 @@ static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
         }
 
         KeyPoint keypoint;
-        keypoint.p = sv::Point2F(max_x * w / (float)out.w, max_y * h / (float)out.h);
+        keypoint.p = cv::Point2f(max_x * w / (float)out.w, max_y * h / (float)out.h);
         keypoint.prob = max_prob;
 
         keypoints.push_back(keypoint);
@@ -101,9 +101,9 @@ static int detect_posenet(const sv::Mat& bgr, std::vector<KeyPoint>& keypoints)
     return 0;
 }
 
-static void draw_pose(sv::Mat& image, const std::vector<KeyPoint>& keypoints)
+static void draw_pose(cv::Mat& image, const std::vector<KeyPoint>& keypoints)
 {
-    //sv::Mat image = bgr.clone();
+    //cv::Mat image = bgr.clone();
 
     // draw bone
     static const int joint_pairs[16][2] = {
@@ -118,7 +118,7 @@ static void draw_pose(sv::Mat& image, const std::vector<KeyPoint>& keypoints)
         if (p1.prob < 0.2f || p2.prob < 0.2f)
             continue;
 
-        sv::line(image, p1.p, p2.p, sv::Scalar(255, 0, 0), 2);
+        cv::line(image, p1.p, p2.p, cv::Scalar(255, 0, 0), 2);
     }
 
     // draw joint
@@ -131,13 +131,12 @@ static void draw_pose(sv::Mat& image, const std::vector<KeyPoint>& keypoints)
         if (keypoint.prob < 0.2f)
             continue;
 
-        sv::circle(image, keypoint.p, 3, sv::Scalar(0, 255, 0), -1);
+        cv::circle(image, keypoint.p, 3, cv::Scalar(0, 255, 0), -1);
     }
 
-    sv::imshow("image", image);
-    sv::waitKey(0);
-    sv::rgb_bgr_swap_inplace(image);
-    sv::imwrite("simplepose_result.bmp", image);
+    cv::imshow("image", image);
+    cv::waitKey(0);
+    cv::imwrite("simplepose_result.bmp", image);
 }
 
 int main(int argc, char** argv)
@@ -152,13 +151,12 @@ int main(int argc, char** argv)
         //const char* imagepath = argv[1];
         const char* imagepath = "000017.bmp";
 
-        sv::Mat m = sv::imread(imagepath);
+        cv::Mat m = cv::imread(imagepath);
         if (m.empty())
         {
             fprintf(stderr, "cv::imread %s failed\n", imagepath);
             return -1;
         }
-        sv::rgb_bgr_swap_inplace(m);
         std::vector<KeyPoint> keypoints;
         detect_posenet(m, keypoints);
 

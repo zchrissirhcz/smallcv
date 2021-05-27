@@ -26,7 +26,7 @@
 
 #include "smallcv.hpp"
 
-static int detect_squeezenet(const sv::Mat& bgr, std::vector<float>& cls_scores)
+static int detect_squeezenet(const cv::Mat& bgr, std::vector<float>& cls_scores)
 {
     ncnn::Net squeezenet;
 
@@ -36,7 +36,7 @@ static int detect_squeezenet(const sv::Mat& bgr, std::vector<float>& cls_scores)
     squeezenet.load_param("squeezenet_v1.1.param");
     squeezenet.load_model("squeezenet_v1.1.bin");
 
-    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data.get(), ncnn::Mat::PIXEL_BGR, bgr.get_width(), bgr.get_height(), 227, 227);
+    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 227, 227);
 
     const float mean_vals[3] = { 104.f, 117.f, 123.f };
     in.substract_mean_normalize(mean_vals, 0);
@@ -94,14 +94,13 @@ int main(int argc, char** argv)
         //const char* imagepath = argv[1];
         const char* imagepath = "000017.bmp";
 
-        sv::Mat m = sv::imread(imagepath);
+        cv::Mat m = cv::imread(imagepath);
         if (m.empty())
         {
             fprintf(stderr, "cv::imread %s failed\n", imagepath);
             return -1;
         }
 
-        sv::rgb_bgr_swap_inplace(m);
         std::vector<float> cls_scores;
         detect_squeezenet(m, cls_scores);
 
