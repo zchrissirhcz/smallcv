@@ -20,7 +20,7 @@
 
 #include "smallcv.hpp"
 
-static int detect_shufflenetv2(const sv::Mat& bgr, std::vector<float>& cls_scores)
+static int detect_shufflenetv2(const cv::Mat& bgr, std::vector<float>& cls_scores)
 {
     ncnn::Net shufflenetv2;
 
@@ -31,7 +31,7 @@ static int detect_shufflenetv2(const sv::Mat& bgr, std::vector<float>& cls_score
     shufflenetv2.load_param("shufflenet_v2_x0.5-opt.param");
     shufflenetv2.load_model("shufflenet_v2_x0.5-opt.bin");
 
-    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data.get(), ncnn::Mat::PIXEL_BGR, bgr.get_width(), bgr.get_height(), 224, 224);
+    ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, bgr.cols, bgr.rows, 224, 224);
 
     const float norm_vals[3] = { 1 / 255.f, 1 / 255.f, 1 / 255.f };
     in.substract_mean_normalize(0, norm_vals);
@@ -104,13 +104,12 @@ int main(int argc, char** argv)
     //const char* imagepath = argv[1];
     const char* imagepath = "000017.bmp";
 
-    sv::Mat m = sv::imread(imagepath);
+    cv::Mat m = cv::imread(imagepath);
     if (m.empty())
     {
         fprintf(stderr, "cv::imread %s failed\n", imagepath);
         return -1;
     }
-    sv::rgb_bgr_swap_inplace(m);
     std::vector<float> cls_scores;
     detect_shufflenetv2(m, cls_scores);
 

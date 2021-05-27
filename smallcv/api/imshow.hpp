@@ -3,12 +3,12 @@
 
 #include "mat.hpp"
 
-namespace sv {
+namespace cv {
 
 void imshow(const char* winname, const Mat& im);
 
 void waitKey(int milli_secs);
 
-} // namespace sv
+} // namespace cv
 
-#endif
+#endif // SMALLCV_IMSHOW_HPP

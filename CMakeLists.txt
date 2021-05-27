@@ -14,32 +14,35 @@ if (USE_ASAN)
   set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
   set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+else()
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 # check memory leak with VLD in Visual Studio
 # add_definitions(-DVLD)
 
 set(smallcv_api_files
-  smallcv/smallcv.hpp
-  smallcv/mat.hpp
-  smallcv/imdraw.hpp
+  smallcv/api/smallcv.hpp
+  smallcv/api/mat.hpp
+  smallcv/api/imdraw.hpp
 )
 
 set(smallcv_impl_files
-  smallcv/smallcv.cpp
-  smallcv/fc_log.h
-  smallcv/fc_log.c
-  smallcv/improc_private.hpp
-  smallcv/improc_private.cpp
-  smallcv/imdraw.cpp
+  smallcv/impl/smallcv.cpp
+  smallcv/impl/fc_log.h
+  smallcv/impl/fc_log.c
+  smallcv/impl/improc_private.hpp
+  smallcv/impl/improc_private.cpp
+  smallcv/impl/imdraw.cpp
+  smallcv/impl/image_io.cpp
 )
 
 if(SMALLCV_IMSHOW)
   list(APPEND smallcv_api_files
-    smallcv/imshow.hpp
+    smallcv/api/imshow.hpp
   )
   list(APPEND smallcv_impl_files
-    smallcv/imshow.cpp
+    smallcv/impl/imshow.cpp
     deps/imshow/glad/glad.c
   )
   find_package(glfw3 QUIET) # 3.3-stable branch recommended
@@ -71,11 +74,13 @@ add_library(smallcv STATIC
   ${smallcv_impl_files}
 )
 
-target_include_directories(smallcv PRIVATE "deps/stb")
-target_include_directories(smallcv PUBLIC "smallcv")
+target_include_directories(smallcv
+  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/stb"
+  PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/smallcv/api"
+)
 if(SMALLCV_IMSHOW)
   target_link_libraries(smallcv glfw)
-  target_include_directories(smallcv PRIVATE "deps/imshow")
+  target_include_directories(smallcv PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/imshow")
   target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMSHOW)
 endif()
 

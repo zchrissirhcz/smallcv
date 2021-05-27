@@ -10,4 +10,4 @@
 #endif
 
 
-#endif
+#endif // SMALLCV_HPP

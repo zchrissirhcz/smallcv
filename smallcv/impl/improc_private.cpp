@@ -3,21 +3,21 @@
 #include <assert.h>
 #include <string.h>
 
-namespace sv {
+namespace cv {
 
     void image_upside_down(const Mat& im, Mat& im_upsd)
     {
-        int height = im.get_height();
-        int width = im.get_width();
-        int channels = im.get_channels();
+        int height = im.rows;
+        int width = im.cols;
+        int channels = im.channels();
         assert(channels == 3);
-        int linebytes = im_upsd.get_width() * channels;
+        int linebytes = im_upsd.cols * channels;
 
-        unsigned char* dst = im_upsd.data.get() + linebytes*(height-1);
-        unsigned char* src = im.data.get();
-        unsigned char* outbuf = im_upsd.data.get();
+        unsigned char* dst = im_upsd.data + linebytes*(height-1);
+        unsigned char* src = im.data;
+        unsigned char* outbuf = im_upsd.data;
 
-        unsigned char* input = im.data.get();
+        unsigned char* input = im.data;
 
         for (int h = 0; h < height; h++) {
             for (int wc = 0; wc < width*channels; wc++) {
