@@ -160,12 +160,6 @@ typedef Rect_<double> Rect2d;
 typedef Rect2i Rect;
 
 
-Mat imread(const char* image_path);
-Mat imread(const std::string& image_path);
-void imwrite(const char* filename, const cv::Mat& image);
-void imwrite(const std::string& save_path, const cv::Mat& image);
-
-
 enum {
     COLOR_BGR2GRAY = 0,
     COLOR_BGR2RGB = 1,

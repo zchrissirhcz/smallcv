@@ -18,7 +18,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "smallcv.hpp"
+#include "smallcv/smallcv.hpp"
 
 static int detect_shufflenetv2(const cv::Mat& bgr, std::vector<float>& cls_scores)
 {

@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <stdio.h>
 #include <vector>
-#include "smallcv.hpp"
+#include "smallcv/smallcv.hpp"
 
 struct KeyPoint
 {

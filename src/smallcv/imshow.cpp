@@ -1,5 +1,5 @@
-#include "imshow.hpp"
-#include "improc_private.hpp"
+#include "smallcv/imshow.hpp"
+#include "smallcv/improc_private.hpp"
 
 namespace cv {
 

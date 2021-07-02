@@ -1,4 +1,4 @@
-#include "smallcv.hpp"
+#include "smallcv/smallcv.hpp"
 
 
 #include <assert.h>

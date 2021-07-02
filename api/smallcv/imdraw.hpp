@@ -1,7 +1,7 @@
 #ifndef SMALLCV_IMDRAW_HPP
 #define SMALLCV_IMDRAW_HPP
 
-#include "mat.hpp"
+#include "smallcv/mat.hpp"
 
 namespace cv {
 
