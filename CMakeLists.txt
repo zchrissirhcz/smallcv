@@ -1,3 +1,13 @@
+#------------------------------------------------------------
+# setup default install directory
+# (must in the beginning)
+#------------------------------------------------------------
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation Directory")
+endif()
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+
+
 cmake_minimum_required(VERSION 3.15)
 
 project(smallcv)
@@ -16,6 +26,11 @@ option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" ON)
 
 include("cmake/deps.cmake")
 include("cmake/overlook.cmake")
+
+if(NOT CMAKE_BUILD_TYPE)                                                                                       
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
+endif()
+message(STATUS ">>> Build Type: ${CMAKE_BUILD_TYPE}")
 
 set(smallcv_api_files
   ${CMAKE_SOURCE_DIR}/api/smallcv/smallcv.hpp
@@ -52,6 +67,13 @@ add_library(smallcv STATIC
   ${smallcv_src_files}
 )
 
+set_target_properties(smallcv PROPERTIES
+  PUBLIC_HEADER
+    "${smallcv_api_files}"
+  DEBUG_POSTFIX
+    "_d"
+)
+
 target_include_directories(smallcv
   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/api"
@@ -73,3 +95,4 @@ if(SMALLCV_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
+install(TARGETS smallcv)
