@@ -10,6 +10,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  BUILD_DIR: build_ci
 
 jobs:
   build:
@@ -45,8 +46,8 @@ jobs:
       - name: Configure with CMake
         shell: bash
         run: |
-          mkdir build
-          cd build
+          mkdir ${{env.BUILD_TYPE}}
+          cd ${{env.BUILD_TYPE}}
           if [ '${{runner.os}}' == 'Windows' ]; then
             echo "Yes, this is on Windows"
             cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
@@ -55,7 +56,8 @@ jobs:
             cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
           fi
       - name: Building
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        working-directory: ${{env.BUILD_TYPE}}
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
       - name: Testing
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{env.BUILD_TYPE}}
         run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
