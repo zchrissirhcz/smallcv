@@ -22,7 +22,7 @@ option(SMALLCV_USE_ASAN "Use address sanitizer?" OFF)
 option(SMALLCV_USE_VLD  "Use VLD for memleak check?" OFF)
 
 option(SMALLCV_EXAMPLES "Build ncnn examples?" ON)
-option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" ON)
+option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" OFF)
 option(SMALLCV_TEST "build test?" OFF)
 
 
