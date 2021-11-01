@@ -1,0 +1,61 @@
+# GH actions
+
+name: unittest
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.image }}
+    strategy:
+      matrix:
+        image: [ 'windows-latest', 'ubuntu-latest', 'macos-latest' ]
+      fail-fast: false
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v3
+
+      - name: Install googletest
+        shell: bash
+        run: |
+          git clone https://github.com/google/googletest --depth 1
+          cd googletest
+          mkdir build && cd build
+          if [ '${{runner.os}}' == 'Windows' ]; then
+            echo "Yes, this is on Windows"
+            cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -Dgtest_force_shared_crt=ON -G "Visual Studio 16 2019" -A x64
+          else
+            echo "Ohh, this is not on Windows"
+            cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -G Ninja
+          fi
+          cmake --build . --config ${{env.BUILD_TYPE}} -j 2
+          cmake --install . --config ${{env.BUILD_TYPE}}
+
+      - name: Configure with CMake
+        shell: bash
+        run: |
+          mkdir build
+          cd build
+          if [ '${{runner.os}}' == 'Windows' ]; then
+            echo "Yes, this is on Windows"
+            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
+          else
+            echo "Ohh, this is not on Windows"
+            cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
+          fi
+      - name: Building
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - name: Testing
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure

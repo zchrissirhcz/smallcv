@@ -9,6 +9,7 @@
 int main() {
     {
         std::string image_path = "mingren.jpg";
+        //std::string image_path = "E:/projects/arccv/smallcv/build/vs2019-x64/mingren.jpg";
         cv::Mat image = cv::imread(image_path);
         cv::Rect rect(100, 100, 233, 233);
         cv::rectangle(image, rect, cv::Scalar(0,0,255), 2);

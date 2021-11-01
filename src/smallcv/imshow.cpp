@@ -30,7 +30,7 @@ void waitKey(int delay)
 #include <stdbool.h>
 #include <time.h>
 
-#include "fc_log.h"
+#include "smallcv/benchmark.hpp"
 //#define OFFSET 50
 
 // compatible with older GLFW
@@ -246,7 +246,7 @@ void fc_glfw_set_window_resizable(bool b) {
 
 void fc_glfw_wait_key(int delay)
 {
-    long t_start = fc_gettime();
+    double t_start = cv::get_current_time();
 
     // since we hide them in imshow(), we should show them now
     FcGlfwWindow* win = g_fc_windows;
@@ -291,9 +291,9 @@ void fc_glfw_wait_key(int delay)
     }
     else // wait for event for the specified duration (delay)
     {
-        long t_end = t_start + delay;
+        double t_end = t_start + delay;
         for (; closed_win_cnt != win_cnt;) {
-            fc_sleep(1);
+            cv::sleep(1);
 
             win = g_fc_windows;
             closed_win_cnt = 0;
@@ -311,7 +311,7 @@ void fc_glfw_wait_key(int delay)
                 glfwWaitEvents();
                 win = win->next;
             }
-            long now = fc_gettime();
+            double now = cv::get_current_time();
             if (now >= t_end) {
                 return ; // no time rest
             }

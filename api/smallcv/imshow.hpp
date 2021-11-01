@@ -1,5 +1,4 @@
-#ifndef SMALLCV_IMSHOW_HPP
-#define SMALLCV_IMSHOW_HPP
+#pragma once
 
 #include "smallcv/mat.hpp"
 
@@ -11,4 +10,4 @@ void waitKey(int milli_secs);
 
 } // namespace cv
 
-#endif // SMALLCV_IMSHOW_HPP
+

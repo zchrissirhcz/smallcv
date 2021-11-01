@@ -1,5 +1,4 @@
-#ifndef SMALLCV_IMAGEIO_HPP
-#define SMALLCV_IMAGEIO_HPP
+#pragma once
 
 #include "smallcv/mat.hpp"
 
@@ -10,6 +9,4 @@ namespace cv {
     void imwrite(const char* filename, const cv::Mat& image);
     void imwrite(const std::string& save_path, const cv::Mat& image);
 
-} // tv
-
-#endif // SMALLCV_IMAGEIO_HPP
+} // cv

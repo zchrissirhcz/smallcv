@@ -1,5 +1,4 @@
-#ifndef SMALLCV_MAT_HPP
-#define SMALLCV_MAT_HPP
+#pragma once
 
 
 #include <stdio.h>
@@ -170,5 +169,3 @@ void cvtColor(Mat src, Mat dst, int flag);
  
 } // namespace cv
 
-
-#endif // SMALLCV_MAT_HPP

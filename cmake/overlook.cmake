@@ -1,4 +1,13 @@
 #################################################
+# overlook: the missing linter for C/C++
+#
+# author:   ChrisZZ
+# email:    imzhuo@foxmail.com
+# license:  MIT
+#################################################
+
+
+#################################################
 #
 # Useful funtions
 #
@@ -71,7 +80,7 @@ endfunction()
 option(USE_OVERLOOK_FLAGS "use safe compilation flags?" ON)
 option(OVERLOOK_STRICT_FLAGS "strict c/c++ flags checking?" OFF)
 option(USE_CPPCHECK "use cppcheck for static checkingg?" OFF)
-option(OVERLOOK_VERBOSE "verbose output?" OFF)
+option(OVERLOOK_VERBOSE "verbose output?" ON)
 
 #################################################
 #
@@ -103,7 +112,7 @@ endif()
 if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
   overlook_list_append(OVERLOOK_C_FLAGS /we4013)
   overlook_list_append(OVERLOOK_CXX_FLAGS /we4013)
-elseif(CMAKE_C_COMPILER_ID MATCHES "GNU")
+elseif(CMAKE_C_COMPILER_ID MATCHES "GNU" AND CMAKE_C_COMPILER_VERSION LESS 9.2)
   overlook_list_append(OVERLOOK_C_FLAGS -Werror=implicit-function-declaration)
   overlook_list_append(OVERLOOK_CXX_FLAGS -Werror=implicit-function-declaration)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
@@ -116,7 +125,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
   overlook_list_append(OVERLOOK_C_FLAGS /we4431)
   overlook_list_append(OVERLOOK_CXX_FLAGS /we4431)
 elseif(CMAKE_C_COMPILER_ID MATCHES "GNU")
-  if(CMAKE_CXX_COMPILER_VERSION LESS 9.4) # gcc/g++ <= 9.3 required
+  if(CMAKE_CXX_COMPILER_VERSION LESS 9.3) # gcc/g++ < 9.3 required
     overlook_list_append(OVERLOOK_C_FLAGS -Werror=implicit-int)
     overlook_list_append(OVERLOOK_CXX_FLAGS -Werror=implicit-int)
   endif()
@@ -413,7 +422,11 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
   overlook_list_append(OVERLOOK_CXX_FLAGS -Werror=multichar)
 endif()
 
-
+# 33. 用 memset 等 C 函数设置 非POD class 对象
+# linux下，GCC9.3能发现此问题，但clang10不能发现
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  overlook_list_append(OVERLOOK_CXX_FLAGS -Werror=class-memaccess)
+endif()
 
 
 # 将上述定制的FLAGS追加到CMAKE默认的编译选项中
@@ -421,6 +434,18 @@ endif()
 if (USE_OVERLOOK_FLAGS)
   overlook_list_append(CMAKE_C_FLAGS "${OVERLOOK_C_FLAGS}")
   overlook_list_append(CMAKE_CXX_FLAGS "${OVERLOOK_CXX_FLAGS}")
+
+  overlook_list_append(CMAKE_C_FLAGS_DEBUG "${OVERLOOK_C_FLAGS}")
+  overlook_list_append(CMAKE_CXX_FLAGS_DEBUG "${OVERLOOK_CXX_FLAGS}")
+
+  overlook_list_append(CMAKE_C_FLAGS_RELEASE "${OVERLOOK_C_FLAGS}")
+  overlook_list_append(CMAKE_CXX_FLAGS_RELEASE "${OVERLOOK_CXX_FLAGS}")
+
+  overlook_list_append(CMAKE_C_FLAGS_MINSIZEREL "${OVERLOOK_C_FLAGS}")
+  overlook_list_append(CMAKE_CXX_FLAGS_MINSIZEREL "${OVERLOOK_CXX_FLAGS}")
+  
+  overlook_list_append(CMAKE_C_FLAGS_RELWITHDEBINFO "${OVERLOOK_C_FLAGS}")
+  overlook_list_append(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${OVERLOOK_CXX_FLAGS}")
 endif()
 
 if (OVERLOOK_VERBOSE)
@@ -524,10 +549,13 @@ elseif (OVERLOOK_ARCH STREQUAL x86)
     set(OVERLOOK_ABI "x86")
   endif()
 elseif (OVERLOOK_ARCH STREQUAL arm)
-  if (CMAKE_C_COMPILER MATCHES "arm-linux-gnueabihf-gcc")
+  # determine ARCH from compiler name. Note: we can't use MATCHES for c++ compiler, since `++` failed for regular expression
+  if(CMAKE_C_COMPILER MATCHES "aarch64-linux-gnu-gcc")
+    set(OVERLOOK_ABI "aarch64")
+  elseif(CMAKE_C_COMPILER MATCHES "arm-linux-gnueabihf-gcc")
     set(OVERLOOK_ABI "arm-eabihf")
   elseif(CMAKE_C_COMPILER MATCHES "aarch64-none-linux-gnu-gcc")
-    set(OVERLOOK_ABI "aarch64-none")
+    set(OVERLOOK_ABI "aarch64")
   else()
     message(FATAL_ERROR "un-assigned ABI, please add it now")
   endif()

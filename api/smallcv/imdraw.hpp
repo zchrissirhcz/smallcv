@@ -1,5 +1,4 @@
-#ifndef SMALLCV_IMDRAW_HPP
-#define SMALLCV_IMDRAW_HPP
+#pragma once
 
 #include "smallcv/mat.hpp"
 
@@ -15,4 +14,3 @@ namespace cv {
 
 }
 
-#endif // SMALLCV_IMDRAW_HPP

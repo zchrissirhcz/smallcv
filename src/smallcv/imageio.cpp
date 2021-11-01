@@ -1,4 +1,4 @@
-#include "smallcv/smallcv.hpp"
+#include "smallcv/imageio.hpp"
 #include <stdlib.h>
 #include <string.h>
 #include <string>

@@ -1,5 +1,4 @@
-#ifndef SMALLCV_BORDER_HPP
-#define SMALLCV_BORDER_HPP
+#pragma once
 
 #include "smallcv/mat.hpp"
 #include <vector>
@@ -11,5 +10,3 @@ namespace cv
 
     cv::Rect maskBoundingRect(const cv::Mat& image);
 }
-
-#endif // SMALLCV_BORDER_HPP

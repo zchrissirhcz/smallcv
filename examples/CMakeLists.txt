@@ -44,7 +44,7 @@ if(SMALLCV_EXAMPLES_NCNN)
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy
       ${CMAKE_SOURCE_DIR}/assets/${file}
-      ${CMAKE_BINARY_DIR}
+      ${CMAKE_CURRENT_BINARY_DIR}
     )
   endforeach()
   # add_executable(ncnn_nanodet
