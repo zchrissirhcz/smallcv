@@ -29,6 +29,7 @@ jobs:
 
       - name: Install glfw3
         shell: bash
+        run: |
           git clone https://github.com/glfw/glfw --depth 1
           cd glfw
           mkdir build && cd build
