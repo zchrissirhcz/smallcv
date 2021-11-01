@@ -10,6 +10,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  BUILD_DIR: build_ci
 
 jobs:
   build:
@@ -25,6 +26,22 @@ jobs:
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@v3
+
+    #   - name: Install glfw3
+    #     shell: bash
+    #     run: |
+    #       git clone https://github.com/glfw/glfw --depth 1
+    #       cd glfw
+    #       mkdir build && cd build
+    #       if [ '${{runner.os}}' == 'Windows' ]; then
+    #         echo "Yes, this is on Windows"
+    #         cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/glfw-install -G "Visual Studio 16 2019" -A x64
+    #       else
+    #         echo "Ohh, this is not on Windows"
+    #         cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/glfw-install -G Ninja
+    #       fi
+    #       cmake --build . --config ${{env.BUILD_TYPE}} -j 2
+    #       cmake --install . --config ${{env.BUILD_TYPE}}
 
       - name: Install googletest
         shell: bash
@@ -45,17 +62,18 @@ jobs:
       - name: Configure with CMake
         shell: bash
         run: |
-          mkdir build
-          cd build
+          mkdir ${{env.BUILD_TYPE}}
+          cd ${{env.BUILD_TYPE}}
           if [ '${{runner.os}}' == 'Windows' ]; then
             echo "Yes, this is on Windows"
-            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
+            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
           else
             echo "Ohh, this is not on Windows"
-            cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSHUFACV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
+            cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
           fi
       - name: Building
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        working-directory: ${{env.BUILD_TYPE}}
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
       - name: Testing
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{env.BUILD_TYPE}}
         run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
