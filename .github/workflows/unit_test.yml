@@ -66,10 +66,10 @@ jobs:
           cd ${{env.BUILD_TYPE}}
           if [ '${{runner.os}}' == 'Windows' ]; then
             echo "Yes, this is on Windows"
-            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
+            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
           else
             echo "Ohh, this is not on Windows"
-            cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
+            cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
           fi
       - name: Building
         working-directory: ${{env.BUILD_TYPE}}
