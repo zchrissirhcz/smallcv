@@ -3,14 +3,14 @@
 # (must in the beginning)
 #------------------------------------------------------------
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation Directory")
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation Directory")
 endif()
 message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 
 
 cmake_minimum_required(VERSION 3.20)
 
-project(smallcv)
+project(SmallCV)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
@@ -23,6 +23,8 @@ option(SMALLCV_USE_VLD  "Use VLD for memleak check?" OFF)
 
 option(SMALLCV_EXAMPLES "Build ncnn examples?" ON)
 option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" ON)
+option(SMALLCV_TEST "build test?" OFF)
+
 
 include("cmake/deps.cmake")
 include("cmake/overlook.cmake")
@@ -37,7 +39,7 @@ message(STATUS ">>> Build Type: ${CMAKE_BUILD_TYPE}")
 # version
 #----------------------------------------------------------------------
 if(NOT DEFINED SMALLCVCV_VERSION)
-    string(TIMESTAMP SMALLCVCV_VERSION "%Y%m%d")
+  string(TIMESTAMP SMALLCVCV_VERSION "%Y%m%d")
 endif()
 
 set(SMALLCV_VERSION_MAJOR 0)
@@ -45,9 +47,9 @@ set(SMALLCV_VERSION_MINOR 0)
 set(SMALLCV_VERSION_PATCH 0)
 set(SMALLCV_VERSION_STRING ${SMALLCV_VERSION_MAJOR}.${SMALLCV_VERSION_MINOR}.${SMALLCV_VERSION_PATCH})
 if(APPLE OR IOS)
-    # macos / ios only accepts a.b.c.d.e where a=24bit b/c/d/e=10bit
-    # 20201228 to 20.12.28
-    set(SMALLCV_VERSION_STRING ${SMALLCV_VERSION_MAJOR}.${SMALLCV_VERSION_MINOR}.${SMALLCV_VERSION_PATCH}.0.0)
+  # macos / ios only accepts a.b.c.d.e where a=24bit b/c/d/e=10bit
+  # 20201228 to 20.12.28
+  set(SMALLCV_VERSION_STRING ${SMALLCV_VERSION_MAJOR}.${SMALLCV_VERSION_MINOR}.${SMALLCV_VERSION_PATCH}.0.0)
 endif()
 message(STATUS "SMALLCV_VERSION_STRING = ${SMALLCV_VERSION_STRING}")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/smallcv/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
@@ -131,7 +133,7 @@ install(TARGETS smallcv)
 #----------------------------------------------------------------------
 # Unit tests
 #----------------------------------------------------------------------
-if(SmallCV_TEST)
+if(SMALLCV_TEST)
   enable_testing()
   find_package(GTest REQUIRED)
 
