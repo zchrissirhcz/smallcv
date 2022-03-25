@@ -7,6 +7,8 @@ namespace cv {
 
     void image_upside_down(const Mat& im, Mat& im_upsd)
     {
+        im_upsd.create(im.size(), im.type());
+
         int height = im.rows;
         int width = im.cols;
         int channels = im.channels();
