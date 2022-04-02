@@ -1,4 +1,4 @@
-#include "smallcv/imdraw.hpp"
+#include "smallcv.hpp"
 #include <cmath>
 
 namespace cv {

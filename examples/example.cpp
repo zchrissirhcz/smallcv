@@ -4,7 +4,7 @@
 #endif
 
 #include <string>
-#include "smallcv/smallcv.hpp"
+#include "smallcv.hpp"
 
 int main() {
     {
@@ -16,6 +16,10 @@ int main() {
         cv::imshow("mingren", image);
         cv::waitKey(0);
         cv::imwrite("mingren-copy.png", image);
+
+        cv::Mat gray;
+        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+        cv::imwrite("gray.png", gray);
     }
 
 #ifdef VLD

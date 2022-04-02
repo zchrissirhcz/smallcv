@@ -6,6 +6,14 @@ add_executable(basic_example
 )
 target_link_libraries(basic_example smallcv)
 
+# copy image
+add_custom_command(TARGET basic_example
+  POST_BUILD
+
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/assets/mingren.jpg ${CMAKE_BINARY_DIR}/
+)
+
+
 #----------------------------------------
 # ncnn examples
 #----------------------------------------

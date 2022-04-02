@@ -1,4 +1,4 @@
-#include "smallcv/benchmark.hpp"
+#include "smallcv.hpp"
 #include <stdio.h>
 
 #ifdef _WIN32

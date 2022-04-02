@@ -1,10 +1,8 @@
-#include "version.h"
 #include "gtest/gtest.h"
+#include "smallcv.hpp"
 
-TEST(version, macros)
+TEST(smallcv, hello)
 {
-    EXPECT_TRUE(SMALLCV_VERSION_MAJOR >= 0);
-    EXPECT_TRUE(SMALLCV_VERSION_MINOR >= 0);
-    EXPECT_TRUE(SMALLCV_VERSION_PATCH >= 0);
+    printf("hello smallcv!\n");
 }
 

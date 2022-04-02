@@ -1,5 +1,4 @@
-#include "smallcv/imshow.hpp"
-#include "smallcv/improc_private.hpp"
+#include "smallcv.hpp"
 
 namespace cv {
 
@@ -30,7 +29,6 @@ void waitKey(int delay)
 #include <stdbool.h>
 #include <time.h>
 
-#include "smallcv/benchmark.hpp"
 //#define OFFSET 50
 
 // compatible with older GLFW
