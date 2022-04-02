@@ -12,24 +12,19 @@ Small Computer Vision Library.
     - [x] C++11 based
     - [x] Not including optimization
 - Conformance
-    - [x] API compatible with OpenCV (identifier name keep same, values may differ)
+    - [x] API like OpenCV
     - [x] Same result on PC and Android
 
 
 ## APIs
 - `Mat`
 - `imread()`/`imwrite()`/`imshow()`
+- `cvtColor()`/`resize()`
 
-
-## Usage
-
-Replace `#include <opencv2/opencv.hpp>` with `#include <smallcv/smallcv.hpp>`.
-
-
-## Example
+## Example Usage
 ```c++
 #include <string>
-#include <smallcv/smallcv.hpp>
+#include "smallcv.hpp"
 
 int main() {
     std::string image_path = "mingren.jpg";
