@@ -11,6 +11,7 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_DIR: build_ci
+  ProgramData: "C:\\ProgramData"
 
 jobs:
   build:
