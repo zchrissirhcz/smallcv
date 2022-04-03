@@ -145,7 +145,7 @@ void circle(Mat& image, Point center, int radius, const Scalar& color, int thick
     int v2 = color.val[2];
     for (int y = y0; y <= y1; y++) {
         for (int x = x0; x <= x1; x++) {
-            float dist = std::hypot(y - center.y, x - center.x);
+            float dist = hypot(y - center.y, x - center.x);
             if (dist <= radius) {
                 // data[h=y,w=x] = color
                 data[y * linebytes + x * 3] = v0;
