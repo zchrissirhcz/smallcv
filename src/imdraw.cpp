@@ -551,7 +551,7 @@ void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* t
     delete[] resized_font_bitmap;
 }
 
-void cv::draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     const unsigned char* pen_color = (const unsigned char*)&color;
 
