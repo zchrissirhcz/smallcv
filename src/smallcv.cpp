@@ -116,6 +116,11 @@ uchar* Mat::ptr(int y)
     return data + step * y;
 }
 
+const uchar* Mat::ptr(int y) const
+{
+    //CV_DbgAssert( y == 0 || (data && dims >= 1 && (unsigned)y < (unsigned)size.p[0]) );
+    return data + step * y;
+}
 
 
 uchar* Mat::ptr(int i0, int i1)
@@ -136,6 +141,11 @@ const uchar* Mat::ptr(int i0, int i1) const
     // CV_DbgAssert((unsigned)i1 < (unsigned)size.p[1]);
     //return data + i0 * step.p[0] + i1 * step.p[1];
     return data + i0 * step + i1 * channels_;
+}
+
+int Mat::step1() const
+{
+    return cols * channels_;
 }
 
 }

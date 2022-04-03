@@ -24,14 +24,17 @@ cv::Mat cv::imread(const char* image_path)
     int channels;
     unsigned char* raw_data = stbi_load(image_path, &width, &height, &channels, 0);
     assert(raw_data != NULL);
-    assert(channels == 3); // TODO: support gray image and detect 4-channel RGBA image
+    //assert(channels == 3); // TODO: support gray image and detect 4-channel RGBA image
     Size size(width, height);
-    Mat image(size, CV_8UC3);
+    Mat image(size, CV_8UC(channels));
     uchar* image_data = image.data;
     size_t buf_size = static_cast<size_t>(height * width * channels) * sizeof(unsigned char);
     memcpy(image_data, raw_data, buf_size);
     free(raw_data);
-    cvtColor(image, image, COLOR_RGB2BGR);
+    if (channels == 3)
+    {
+        cvtColor(image, image, COLOR_RGB2BGR);
+    }
 
     return image;
 }

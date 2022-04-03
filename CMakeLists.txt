@@ -107,4 +107,5 @@ if(SMALLCV_TEST)
   endmacro()
 
   smallcv_add_test(size)
+  smallcv_add_test(loadsave)
 endif()

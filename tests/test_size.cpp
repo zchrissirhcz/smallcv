@@ -1,5 +1,5 @@
+#include "cv_helper.hpp"
 #include "gtest/gtest.h"
-#include "smallcv.hpp"
 
 TEST(size, multiply)
 {

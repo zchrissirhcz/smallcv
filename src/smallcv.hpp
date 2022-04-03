@@ -27,7 +27,9 @@
 //------------------------------------------------------------
 // C types
 //------------------------------------------------------------
-typedef unsigned char uchar;
+using uchar = uint8_t;
+using schar = int8_t;
+
 enum {
     CV_8UC1 =  1 * 10 + 1,
     CV_8UC2 =  1 * 10 + 2,
@@ -35,17 +37,50 @@ enum {
     CV_8UC4 =  1 * 10 + 4,
     CV_8U   =  CV_8UC1,
     
-    CV_16UC1 = 2 * 10 + 1,
+    CV_8SC1 =  2 * 10 + 1,
+    CV_8SC2 =  2 * 10 + 2,
+    CV_8SC3 =  2 * 10 + 3,
+    CV_8SC4 =  2 * 10 + 4,
+    CV_8S   =  CV_8SC1,
+
+    CV_16UC1 = 3 * 10 + 1,
+    CV_16UC2 = 3 * 10 + 2,
+    CV_16UC3 = 3 * 10 + 3,
+    CV_16UC4 = 3 * 10 + 4,
     CV_16U   = CV_16UC1,
     
-    CV_32FC1 = 3 * 10 + 1,
-    CV_32FC3 = 3 * 10 + 3,
+    CV_16SC1 = 4 * 10 + 1,
+    CV_16SC2 = 4 * 10 + 2,
+    CV_16SC3 = 4 * 10 + 3,
+    CV_16SC4 = 4 * 10 + 4,
+    CV_16S   = CV_16SC1,
+
+    CV_32SC1 = 5 * 10 + 1,
+    CV_32SC2 = 5 * 10 + 2,
+    CV_32SC3 = 5 * 10 + 3,
+    CV_32SC4 = 5 * 10 + 4,
+    CV_32S   = CV_32SC1,
+
+    CV_32FC1 = 6 * 10 + 1,
+    CV_32FC2 = 6 * 10 + 2,
+    CV_32FC3 = 6 * 10 + 3,
+    CV_32FC4 = 6 * 10 + 4,
     CV_32F   = CV_32FC1,
 
-    CV_64FC1 = 4 * 10 + 1,
-    CV_64FC3 = 4 * 10 + 3,
-    CV_64F   = CV_64FC1
+    CV_64FC1 = 7 * 10 + 1,
+    CV_64FC2 = 7 * 10 + 2,
+    CV_64FC3 = 7 * 10 + 3,
+    CV_64FC4 = 7 * 10 + 4,
+    CV_64F   = CV_64FC1,
+
+    CV_16FC1 = 8 * 10 + 1,
+    CV_16FC2 = 8 * 10 + 2,
+    CV_16FC3 = 8 * 10 + 3,
+    CV_16FC4 = 8 * 10 + 4,
+    CV_16F   = CV_16FC1
 };
+
+#define CV_8UC(n)  (CV_8UC1 + (n) - 1)
 
 
 namespace cv {
@@ -102,7 +137,7 @@ public:
     int type() const;
     int depth() const;
     uchar* ptr(int i0=0);
-    const uchar* ptr(int i0=0) const; // TODO
+    const uchar* ptr(int i0=0) const;
     uchar* ptr(int i0, int i1);
     const uchar* ptr(int i0, int i1) const;
     int step1() const; // TODO
