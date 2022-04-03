@@ -10,9 +10,7 @@ mingren_swap.bmp
 .vscode/
 
 # build
-build/vs2019-x64
-build/linux-x64
-build/Xcode
+build/*/**
 
 # glfw binary
 deps/imshow/glfw

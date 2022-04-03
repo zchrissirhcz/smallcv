@@ -27,11 +27,12 @@ int main() {
         cv::putText(bigger_image, "bigger image", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
         cv::putText(gray, "gray", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
 
+#if !__ANDROID__
         cv::imshow("mingren", image);
         cv::imshow("bigger image", bigger_image, true);
         cv::imshow("gray", gray);
-
         cv::waitKey(0);
+#endif
 
         cv::imwrite("image.png", image);
         cv::imwrite("bigger_image.png", bigger_image);

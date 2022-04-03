@@ -4,6 +4,11 @@
 #include <string>
 #include <memory>
 
+#define SMALLCV_IMAGEIO
+#if !__ANDROID__
+#define SMALLCV_IMSHOW
+#endif
+
 //------------------------------------------------------------
 // logging
 //------------------------------------------------------------

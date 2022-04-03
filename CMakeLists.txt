@@ -15,8 +15,6 @@ project(smallcv)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 
-option(SMALLCV_IMAGEIO "Image I/O?" ON)
-option(SMALLCV_IMSHOW "Provide imshow related functions?" ON)
 option(SMALLCV_EXAMPLES "Build ncnn examples?" ON)
 option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" OFF)
 option(SMALLCV_TEST "build test?" ON)
@@ -50,19 +48,16 @@ set_target_properties(smallcv PROPERTIES
     "_d"
 )
 
-target_include_directories(smallcv PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(smallcv
+  PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src"
+  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/stb"
+)
 
-if(SMALLCV_IMAGEIO)
-  target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMAGEIO)
-  target_include_directories(smallcv PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/stb")
-endif()
-
-if(SMALLCV_IMSHOW)
+if(NOT CMAKE_CROSSCOMPILING)
   list(APPEND smallcv_srcs
     ${CMAKE_SOURCE_DIR}/src/imshow.cpp
     ${CMAKE_SOURCE_DIR}/deps/imshow/glad/glad.c
   )
-  target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMSHOW)
   target_link_libraries(smallcv glfw)
   target_include_directories(smallcv PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/imshow")
 endif()

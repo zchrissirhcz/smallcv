@@ -21,7 +21,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set(glfw3_DIR "" CACHE PATH "Directory that contains glfw3Config.cmake")
 endif()
 
-if(SMALLCV_IMSHOW)
+if(NOT CMAKE_CROSSCOMPILING)
   message(STATUS "glfw3_DIR: ${glfw3_DIR}")
   find_package(glfw3 QUIET) # 3.3-stable branch recommended
   if(glfw3_FOUND)

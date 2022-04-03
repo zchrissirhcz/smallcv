@@ -45,11 +45,6 @@ cd build
 .\vs2019-x64.cmd # Windows build
 ```
 
-If you don't need `imshow()`, disable it via `-DSMALLCV_IMSHOW=OFF` when invoking cmake.
-
-If you don't need `imread()` and `imwrite()`, disable it via `-DSMALLCV_IMAGEIO=OFF` when invoking cmake.
-
-
 ## Example Usage
 ```c++
 #include <string>
