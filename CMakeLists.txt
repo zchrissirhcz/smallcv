@@ -29,6 +29,8 @@ option(SMALLCV_TEST "build test?" OFF)
 include("cmake/deps.cmake")
 include("cmake/overlook.cmake")
 include("cmake/output_dir.cmake")
+# include("cmake/asan.cmake")
+# include("cmake/tsan.cmake")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)

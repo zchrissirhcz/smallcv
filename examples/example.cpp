@@ -14,12 +14,22 @@ int main() {
         cv::Rect rect(100, 100, 233, 233);
         cv::rectangle(image, rect, cv::Scalar(0,0,255), 2);
         cv::imshow("mingren", image);
-        cv::waitKey(0);
+        
+        cv::Mat bigger_image;
+        cv::Size ssize = image.size();
+        cv::Size dsize;
+        dsize.height = ssize.height * 2;
+        dsize.width = ssize.width * 2;
+        cv::resize(image, bigger_image, dsize);
+        cv::imshow("bigger image", bigger_image);
+
         cv::imwrite("mingren-copy.png", image);
 
         cv::Mat gray;
         cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
         cv::imwrite("gray.png", gray);
+        cv::imshow("gray", gray);
+        cv::waitKey(0);
     }
 
 #ifdef VLD

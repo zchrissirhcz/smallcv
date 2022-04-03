@@ -138,14 +138,26 @@ static unsigned int create_texture(const Mat& im)
     Size size;
     size.height = im.rows;
     size.width = im.cols;
-    Mat im_upsd(size, CV_8UC3);
+    Mat im_upsd(size, im.type());
     image_upside_down(im, im_upsd);
 
     //TODO: set alignment here
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     //glPixelStorei(GL_UNPACK_ALIGNMENT, im->align);
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 256, 256, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.cols, im_upsd.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data);
+    const int channels = im.channels();
+    if (channels == 3)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im_upsd.cols, im_upsd.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, im_upsd.data);
+    }
+    else if (channels == 1)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, im_upsd.cols, im_upsd.rows, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, im_upsd.data);
+    }
+    else
+    {
+        SMALLCV_LOGE("only support 1 or 3 channel\n");
+    }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -316,7 +328,15 @@ void fc_glfw_wait_key(int delay)
         }
     }
     if (g_fc_windows) {
-        free(g_fc_windows);
+        FcGlfwWindow* prev_win = nullptr;;
+        FcGlfwWindow* cur_win = g_fc_windows;
+        while(cur_win)
+        {
+            prev_win = cur_win;
+            cur_win = cur_win->next;
+            free(prev_win);
+        }
+        g_fc_windows = nullptr;
     }
     glfwTerminate();
 }

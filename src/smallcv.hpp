@@ -235,13 +235,16 @@ enum class Interpolation
     CUBIC = 3
 };
 
-void resize(const Mat& src, Mat& dst, Size dsize, double fx = 0, double fy = 0, Interpolation method = Interpolation::LINEAR);
+void resize(const Mat& src, Mat& dst, Size dsize, Interpolation method = Interpolation::LINEAR);
 void cvtColor(const Mat& src, Mat& dst, int flag);
+
 void image_upside_down(const Mat& im, Mat& im_upsd);
 void bgr2gray(const Mat& src, Mat& dst);
 void rgb2gray(const Mat& src, Mat& dst);
 void bgr2rgb_inplace(Mat& src);
 void bgr2rgb(const Mat& src, Mat& dst);
+void resize_linear(const Mat& src, Mat& dst, Size dsize);
+void resize_nearest(const Mat& src, Mat& dst, Size dsize);
 
 //------------------------------------------------------------
 // imshow

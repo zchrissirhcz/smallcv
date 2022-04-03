@@ -50,6 +50,7 @@ void cv::imwrite(const char* filename, const cv::Mat& image)
     const char* ext = filename + strlen(filename) - 4;
     int width = static_cast<int>(image.cols);
     int height = static_cast<int>(image.rows);
+    const int comp = image.channels();
     
     assert(image.data != NULL);
 
@@ -71,10 +72,15 @@ void cv::imwrite(const char* filename, const cv::Mat& image)
         fprintf(stderr, "%s only support 1 or 3 channels\n", __FUNCTION__);
         abort();
     }
-    Mat shadow(size, type);
-    memcpy(shadow.data, image.data, width*height*channels);
-    if (channels == 3)
+    Mat shadow;
+    if (channels == 1)
     {
+        shadow = image;
+    }
+    else
+    {
+        shadow.create(size, type);
+        memcpy(shadow.data, image.data, width*height*channels);
         cvtColor(shadow, shadow, COLOR_BGR2RGB);
     }
 
@@ -82,14 +88,14 @@ void cv::imwrite(const char* filename, const cv::Mat& image)
 
     if (0 == strcmp(ext, ".jpg")) {
         int quality = 100;
-        stbi_write_jpg(filename, width, height, 3, data, quality);
+        stbi_write_jpg(filename, width, height, comp, data, quality);
     }
     else if (0 == strcmp(ext, ".png")) {
-        int stride_in_bytes = width * 3; // TODO: Mat may use line alignment
-        stbi_write_png(filename, width, height, 3, data, stride_in_bytes);
+        int stride_in_bytes = width * comp; // TODO: Mat may use line alignment
+        stbi_write_png(filename, width, height, comp, data, stride_in_bytes);
     }
     else if (0 == strcmp(ext, ".bmp")) {
-        stbi_write_bmp(filename, width, height, 3, data);
+        stbi_write_bmp(filename, width, height, comp, data);
     }
     else {
         fprintf(stderr, "%s format is not supported yet!\n", ext);
