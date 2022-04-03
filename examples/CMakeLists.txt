@@ -60,6 +60,3 @@ if(SMALLCV_EXAMPLES_NCNN)
   # )
   # target_link_libraries(ncnn_nanodet smallcv ncnn)
 endif()
-
-# TODO
-# Mat::clone()

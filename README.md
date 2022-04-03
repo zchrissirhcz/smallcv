@@ -17,10 +17,17 @@ Small Computer Vision Library.
 
 
 ## APIs
+Supported:
 - `Mat`
 - `imread()`/`imwrite()`/`imshow()`/`waitKey()`
 - `cvtColor()`/`resize()`
 - `putText()`/`rectangle()`/`circle()`/`line()`
+
+Not supported:
+- `Mat::clone()`
+- `saturate_cast`
+- `parallel_for_`
+- `operator Point_<Tp2>`
 
 
 ## Getting Started

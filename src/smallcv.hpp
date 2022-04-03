@@ -139,7 +139,7 @@ public:
     const uchar* ptr(int i0=0) const;
     uchar* ptr(int i0, int i1);
     const uchar* ptr(int i0, int i1) const;
-    int step1() const; // TODO
+    int step1() const;
 
 private:
     std::shared_ptr<uchar> data_;
@@ -277,9 +277,6 @@ public:
 public:
     Range(int _start, int _end): start(_start), end(_end) {}
 };
-
-// TODO: saturate_cast
-// TODO: parallel_for_
 
 //------------------------------------------------------------
 // image processing
