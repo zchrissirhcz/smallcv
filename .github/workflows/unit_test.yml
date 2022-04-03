@@ -52,7 +52,7 @@ jobs:
           mkdir build && cd build
           if [ '${{runner.os}}' == 'Windows' ]; then
             echo "Yes, this is on Windows"
-            cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -Dgtest_force_shared_crt=ON -G "Visual Studio 16 2019" -A x64
+            cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -Dgtest_force_shared_crt=ON -G "Visual Studio 17 2022" -A x64
           else
             echo "Ohh, this is not on Windows"
             cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/googletest-install -G Ninja
@@ -67,7 +67,7 @@ jobs:
           cd ${{env.BUILD_TYPE}}
           if [ '${{runner.os}}' == 'Windows' ]; then
             echo "Yes, this is on Windows"
-            cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
+            cmake -G "Visual Studio 17 2022" -A x64 .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR='${{github.workspace}}'/googletest-install/lib/cmake/GTest
           else
             echo "Ohh, this is not on Windows"
             cmake -G Ninja .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DSMALLCV_IMSHOW=OFF -DSMALLCV_EXAMPLES=OFF -DSMALLCV_TEST=ON -DGTest_DIR=${{github.workspace}}/googletest-install/lib/cmake/GTest
