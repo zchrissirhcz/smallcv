@@ -30,7 +30,9 @@
 typedef unsigned char uchar;
 enum {
     CV_8UC1 =  1 * 10 + 1,
+    CV_8UC2 =  1 * 10 + 2,
     CV_8UC3 =  1 * 10 + 3,
+    CV_8UC4 =  1 * 10 + 4,
     CV_8U   =  CV_8UC1,
     
     CV_16UC1 = 2 * 10 + 1,
@@ -166,6 +168,16 @@ public:
         return *this;
     }
 
+    const T operator[](const int i) const
+    {
+        return val[i];
+    }
+
+    T operator[](const int i)
+    {
+        return val[i];
+    }
+
 public:
     T val[4];
 };
@@ -262,6 +274,23 @@ void circle(Mat& image, Point center, int radius, const Scalar& color, int thick
 void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness = 1);
 
 void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness=1);
+void putText(Mat& img, const std::string& text, Point org, int fontFace, double fontScale, Scalar color, int thickness = 1);
+
+
+// resolve text bounding box size
+void get_text_drawing_size(const char* text, int fontpixelsize, int* w, int* h);
+// draw ascii printables and newline, the color RGBA is little-endian encoded
+void draw_text_c1(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c2(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c3(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c4(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+// draw ascii printables and newline with stride(bytes-per-row) parameter, the color RGBA is little-endian encoded
+void draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+void draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color);
+// draw ascii printables and newline, convenient wrapper for yuv420sp(nv21/nv12), the color YUV_ is little-endian encoded
+void draw_text_yuv420sp(unsigned char* yuv420sp, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color);
 
 //------------------------------------------------------------
 // load/save

@@ -1,5 +1,9 @@
 #include "smallcv.hpp"
-#include <cmath>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "mat_pixel_drawing_font.h"
 
 namespace cv {
 
@@ -275,6 +279,376 @@ void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness)
         dx2 = image_width - 1;
     }
     draw_solid_rect(im, dx1, dy1, dx2, dy2, color);
+}
+
+void get_text_drawing_size(const char* text, int fontpixelsize, int* w, int* h)
+{
+    *w = 0;
+    *h = 0;
+
+    const int n = strlen(text);
+
+    int line_w = 0;
+    for (int i = 0; i < n; i++)
+    {
+        char ch = text[i];
+
+        if (ch == '\n')
+        {
+            // newline
+            *w = std::max(*w, line_w);
+            *h += fontpixelsize * 2;
+            line_w = 0;
+        }
+
+        if (isprint(ch) != 0)
+        {
+            line_w += fontpixelsize;
+        }
+    }
+
+    *w = std::max(*w, line_w);
+    *h += fontpixelsize * 2;
+}
+
+void draw_text_c1(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    return draw_text_c1(pixels, w, h, w, text, x, y, fontpixelsize, color);
+}
+
+void draw_text_c2(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    return draw_text_c2(pixels, w, h, w * 2, text, x, y, fontpixelsize, color);
+}
+
+void draw_text_c3(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    return draw_text_c3(pixels, w, h, w * 3, text, x, y, fontpixelsize, color);
+}
+
+void draw_text_c4(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    return draw_text_c4(pixels, w, h, w * 4, text, x, y, fontpixelsize, color);
+}
+
+void draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    const unsigned char* pen_color = (const unsigned char*)&color;
+
+    unsigned char* resized_font_bitmap = new unsigned char[fontpixelsize * fontpixelsize * 2];
+
+    const int n = strlen(text);
+
+    int cursor_x = x;
+    int cursor_y = y;
+    for (int i = 0; i < n; i++)
+    {
+        char ch = text[i];
+
+        if (ch == '\n')
+        {
+            // newline
+            cursor_x = x;
+            cursor_y += fontpixelsize * 2;
+        }
+
+        if (isprint(ch) != 0)
+        {
+            const unsigned char* font_bitmap = mono_font_data[ch - ' '];
+
+            // draw resized character
+            //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
+            Size font_bitmap_size;
+            font_bitmap_size.width = 20;
+            font_bitmap_size.height = 40;
+            const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
+
+            Size dsize;
+            dsize.width = fontpixelsize;
+            dsize.height = fontpixelsize * 2;
+            Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
+
+            resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
+
+            for (int j = cursor_y; j < cursor_y + fontpixelsize * 2; j++)
+            {
+                if (j < 0)
+                    continue;
+
+                if (j >= h)
+                    break;
+
+                const unsigned char* palpha = resized_font_bitmap + (j - cursor_y) * fontpixelsize;
+                unsigned char* p = pixels + stride * j;
+
+                for (int k = cursor_x; k < cursor_x + fontpixelsize; k++)
+                {
+                    if (k < 0)
+                        continue;
+
+                    if (k >= w)
+                        break;
+
+                    unsigned char alpha = palpha[k - cursor_x];
+
+                    p[k] = (p[k] * (255 - alpha) + pen_color[0] * alpha) / 255;
+                }
+            }
+
+            cursor_x += fontpixelsize;
+        }
+    }
+
+    delete[] resized_font_bitmap;
+}
+
+void draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    const unsigned char* pen_color = (const unsigned char*)&color;
+
+    unsigned char* resized_font_bitmap = new unsigned char[fontpixelsize * fontpixelsize * 2];
+
+    const int n = strlen(text);
+
+    int cursor_x = x;
+    int cursor_y = y;
+    for (int i = 0; i < n; i++)
+    {
+        char ch = text[i];
+
+        if (ch == '\n')
+        {
+            // newline
+            cursor_x = x;
+            cursor_y += fontpixelsize * 2;
+        }
+
+        if (isprint(ch) != 0)
+        {
+            int font_bitmap_index = ch - ' ';
+            const unsigned char* font_bitmap = mono_font_data[font_bitmap_index];
+
+            // draw resized character
+            //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
+
+            Size font_bitmap_size;
+            font_bitmap_size.width = 20;
+            font_bitmap_size.height = 40;
+            const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
+
+            Size dsize;
+            dsize.width = fontpixelsize;
+            dsize.height = fontpixelsize * 2;
+            Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
+
+            resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
+
+            for (int j = cursor_y; j < cursor_y + fontpixelsize * 2; j++)
+            {
+                if (j < 0)
+                    continue;
+
+                if (j >= h)
+                    break;
+
+                const unsigned char* palpha = resized_font_bitmap + (j - cursor_y) * fontpixelsize;
+                unsigned char* p = pixels + stride * j;
+
+                for (int k = cursor_x; k < cursor_x + fontpixelsize; k++)
+                {
+                    if (k < 0)
+                        continue;
+
+                    if (k >= w)
+                        break;
+
+                    unsigned char alpha = palpha[k - cursor_x];
+
+                    p[k * 2 + 0] = (p[k * 2 + 0] * (255 - alpha) + pen_color[0] * alpha) / 255;
+                    p[k * 2 + 1] = (p[k * 2 + 1] * (255 - alpha) + pen_color[1] * alpha) / 255;
+                }
+            }
+
+            cursor_x += fontpixelsize;
+        }
+    }
+
+    delete[] resized_font_bitmap;
+}
+
+void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    const unsigned char* pen_color = (const unsigned char*)&color;
+
+    unsigned char* resized_font_bitmap = new unsigned char[fontpixelsize * fontpixelsize * 2];
+
+    const int n = strlen(text);
+
+    int cursor_x = x;
+    int cursor_y = y;
+    for (int i = 0; i < n; i++)
+    {
+        char ch = text[i];
+
+        if (ch == '\n')
+        {
+            // newline
+            cursor_x = x;
+            cursor_y += fontpixelsize * 2;
+        }
+
+        if (isprint(ch) != 0)
+        {
+            int font_bitmap_index = ch - ' ';
+            const unsigned char* font_bitmap = mono_font_data[font_bitmap_index];
+
+            // draw resized character
+            //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
+
+            Size font_bitmap_size;
+            font_bitmap_size.width = 20;
+            font_bitmap_size.height = 40;
+            const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
+
+            Size dsize;
+            dsize.width = fontpixelsize;
+            dsize.height = fontpixelsize * 2;
+            Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
+
+            resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
+
+            for (int j = cursor_y; j < cursor_y + fontpixelsize * 2; j++)
+            {
+                if (j < 0)
+                    continue;
+
+                if (j >= h)
+                    break;
+
+                const unsigned char* palpha = resized_font_bitmap + (j - cursor_y) * fontpixelsize;
+                unsigned char* p = pixels + stride * j;
+
+                for (int k = cursor_x; k < cursor_x + fontpixelsize; k++)
+                {
+                    if (k < 0)
+                        continue;
+
+                    if (k >= w)
+                        break;
+
+                    unsigned char alpha = palpha[k - cursor_x];
+
+                    p[k * 3 + 0] = (p[k * 3 + 0] * (255 - alpha) + pen_color[0] * alpha) / 255;
+                    p[k * 3 + 1] = (p[k * 3 + 1] * (255 - alpha) + pen_color[1] * alpha) / 255;
+                    p[k * 3 + 2] = (p[k * 3 + 2] * (255 - alpha) + pen_color[2] * alpha) / 255;
+                }
+            }
+
+            cursor_x += fontpixelsize;
+        }
+    }
+
+    delete[] resized_font_bitmap;
+}
+
+void cv::draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    const unsigned char* pen_color = (const unsigned char*)&color;
+
+    unsigned char* resized_font_bitmap = new unsigned char[fontpixelsize * fontpixelsize * 2];
+
+    const int n = strlen(text);
+
+    int cursor_x = x;
+    int cursor_y = y;
+    for (int i = 0; i < n; i++)
+    {
+        char ch = text[i];
+
+        if (ch == '\n')
+        {
+            // newline
+            cursor_x = x;
+            cursor_y += fontpixelsize * 2;
+        }
+
+        if (isprint(ch) != 0)
+        {
+            const unsigned char* font_bitmap = mono_font_data[ch - ' '];
+
+            // draw resized character
+            //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
+
+            Size font_bitmap_size;
+            font_bitmap_size.width = 20;
+            font_bitmap_size.height = 40;
+            const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
+
+            Size dsize;
+            dsize.width = fontpixelsize;
+            dsize.height = fontpixelsize * 2;
+            Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
+
+            resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
+
+            for (int j = cursor_y; j < cursor_y + fontpixelsize * 2; j++)
+            {
+                if (j < 0)
+                    continue;
+
+                if (j >= h)
+                    break;
+
+                const unsigned char* palpha = resized_font_bitmap + (j - cursor_y) * fontpixelsize;
+                unsigned char* p = pixels + stride * j;
+
+                for (int k = cursor_x; k < cursor_x + fontpixelsize; k++)
+                {
+                    if (k < 0)
+                        continue;
+
+                    if (k >= w)
+                        break;
+
+                    unsigned char alpha = palpha[k - cursor_x];
+
+                    p[k * 4 + 0] = (p[k * 4 + 0] * (255 - alpha) + pen_color[0] * alpha) / 255;
+                    p[k * 4 + 1] = (p[k * 4 + 1] * (255 - alpha) + pen_color[1] * alpha) / 255;
+                    p[k * 4 + 2] = (p[k * 4 + 2] * (255 - alpha) + pen_color[2] * alpha) / 255;
+                    p[k * 4 + 3] = (p[k * 4 + 3] * (255 - alpha) + pen_color[3] * alpha) / 255;
+                }
+            }
+
+            cursor_x += fontpixelsize;
+        }
+    }
+
+    delete[] resized_font_bitmap;
+}
+
+void draw_text_yuv420sp(unsigned char* yuv420sp, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+{
+    // assert w % 2 == 0
+    // assert h % 2 == 0
+    // assert x % 2 == 0
+    // assert y % 2 == 0
+    // assert fontpixelsize % 2 == 0
+
+    const unsigned char* pen_color = (const unsigned char*)&color;
+
+    unsigned int v_y;
+    unsigned int v_uv;
+    unsigned char* pen_color_y = (unsigned char*)&v_y;
+    unsigned char* pen_color_uv = (unsigned char*)&v_uv;
+    pen_color_y[0] = pen_color[0];
+    pen_color_uv[0] = pen_color[1];
+    pen_color_uv[1] = pen_color[2];
+
+    unsigned char* Y = yuv420sp;
+    draw_text_c1(Y, w, h, text, x, y, fontpixelsize, v_y);
+
+    unsigned char* UV = yuv420sp + w * h;
+    draw_text_c2(UV, w / 2, h / 2, text, x / 2, y / 2, std::max(fontpixelsize / 2, 1), v_uv);
 }
 
 }

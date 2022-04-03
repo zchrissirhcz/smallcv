@@ -361,3 +361,31 @@ void cv::image_upside_down(const Mat& im, Mat& im_upsd)
         src += linebytes;
     }
 }
+
+
+
+void cv::putText(Mat& img, const std::string& text, Point org, int fontFace, double fontScale, Scalar _color, int thickness)
+{
+    const int fontpixelsize = 20 * fontScale;
+
+    unsigned int color = 0;
+    unsigned char* border_color = (unsigned char*)&color;
+    const int channels = img.channels();
+
+    if (channels == 1)
+    {
+        border_color[0] = _color[0];
+        draw_text_c1(img.data, img.cols, img.rows, text.c_str(), org.x, org.y - fontpixelsize * 2, fontpixelsize, color);
+    }
+    else if (channels == 3)
+    {
+        border_color[0] = _color[0];
+        border_color[1] = _color[1];
+        border_color[2] = _color[2];
+        draw_text_c3(img.data, img.cols, img.rows, text.c_str(), org.x, org.y - fontpixelsize * 2, fontpixelsize, color);
+    }
+    else
+    {
+        SMALLCV_LOGE("only support 1 and 3 channels\n");
+    }
+}

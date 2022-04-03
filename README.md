@@ -18,8 +18,9 @@ Small Computer Vision Library.
 
 ## APIs
 - `Mat`
-- `imread()`/`imwrite()`/`imshow()`
+- `imread()`/`imwrite()`/`imshow()`/`waitKey()`
 - `cvtColor()`/`resize()`
+- `putText()`/`rectangle()`/`circle()`/`line()`
 
 ## Example Usage
 ```c++
@@ -48,10 +49,10 @@ int main() {
 int main()
 {
     std::string image_path = "mingren.jpg";
+    //std::string image_path = "E:/projects/arccv/smallcv/build/vs2019-x64/mingren.jpg";
     cv::Mat image = cv::imread(image_path);
     cv::Rect rect(100, 100, 233, 233);
     cv::rectangle(image, rect, cv::Scalar(0,0,255), 2);
-    cv::imshow("mingren", image);
     
     cv::Mat bigger_image;
     cv::Size ssize = image.size();
@@ -59,17 +60,24 @@ int main()
     dsize.height = ssize.height * 2;
     dsize.width = ssize.width * 2;
     cv::resize(image, bigger_image, dsize);
-    cv::imshow("bigger image", bigger_image);
-
-    cv::imwrite("mingren-copy.png", image);
 
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-    cv::imwrite("gray.png", gray);
+    
+
+    cv::putText(image, "image", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
+    cv::putText(bigger_image, "bigger image", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
+    cv::putText(gray, "gray", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
+
+    cv::imshow("mingren", image);
+    cv::imshow("bigger image", bigger_image);
     cv::imshow("gray", gray);
+
     cv::waitKey(0);
 
-    return 0;
+    cv::imwrite("image.png", image);
+    cv::imwrite("bigger_image.png", bigger_image);
+    cv::imwrite("gray.png", gray);
 }
 ```
 ![](assets/smallcv_imshow_multiple_win_result.png)
