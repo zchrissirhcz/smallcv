@@ -17,10 +17,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(SMALLCV_IMAGEIO "Image I/O?" ON)
 option(SMALLCV_IMSHOW "Provide imshow related functions?" ON)
-
-option(SMALLCV_USE_ASAN "Use address sanitizer?" OFF)
-option(SMALLCV_USE_VLD  "Use VLD for memleak check?" OFF)
-
 option(SMALLCV_EXAMPLES "Build ncnn examples?" ON)
 option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" OFF)
 option(SMALLCV_TEST "build test?" ON)
@@ -29,7 +25,7 @@ option(SMALLCV_TEST "build test?" ON)
 include("cmake/deps.cmake")
 include("cmake/overlook.cmake")
 include("cmake/output_dir.cmake")
-include("cmake/asan.cmake")
+# include("cmake/asan.cmake")
 # include("cmake/tsan.cmake")
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -42,9 +38,9 @@ message(STATUS ">>> Build Type: ${CMAKE_BUILD_TYPE}")
 #----------------------------------------------------------------------
 
 set(smallcv_srcs
-  ${CMAKE_SOURCE_DIR}/src/imdraw.cpp
-  ${CMAKE_SOURCE_DIR}/src/imgproc.cpp
   ${CMAKE_SOURCE_DIR}/src/smallcv.cpp
+  ${CMAKE_SOURCE_DIR}/src/imgproc.cpp
+  ${CMAKE_SOURCE_DIR}/src/imdraw.cpp
 )
 
 add_library(smallcv STATIC)
@@ -54,9 +50,7 @@ set_target_properties(smallcv PROPERTIES
     "_d"
 )
 
-target_include_directories(smallcv
-  PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
+target_include_directories(smallcv PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 if(SMALLCV_IMAGEIO)
   target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMAGEIO)
@@ -75,8 +69,6 @@ endif()
 
 target_sources(smallcv PRIVATE ${smallcv_srcs})
 
-message(STATUS "smallcv_srcs: ${smallcv_srcs}")
-
 if(SMALLCV_EXAMPLES)
   add_subdirectory(examples)
 endif()
@@ -84,6 +76,7 @@ endif()
 # Report summary
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/summary.cmake")
 
+set_target_properties(smallcv PROPERTIES PUBLIC_HEADER "src/smallcv.hpp")
 install(TARGETS smallcv)
 
 

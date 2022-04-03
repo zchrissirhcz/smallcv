@@ -9,14 +9,7 @@ namespace {
 
 using namespace cv;
 
-//----------------------------------------
-// static function declarations
-//----------------------------------------
-static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color);
-static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color);
-
-
-void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color)
+static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color)
 {
     int channels = im.channels();
     int linebytes = im.cols * channels;
@@ -34,7 +27,7 @@ void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar c
     }
 }
 
-void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color)
+static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color)
 {
     uchar* data = image.data;
     int linebytes = image.cols * 3;
