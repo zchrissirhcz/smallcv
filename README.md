@@ -22,6 +22,33 @@ Small Computer Vision Library.
 - `cvtColor()`/`resize()`
 - `putText()`/`rectangle()`/`circle()`/`line()`
 
+
+## Getting Started
+
+To build this project, you are assumed:
+
+- Familiar with CMake based C/C++ building
+- Installed **glfw** library, which is relied by `imshow()`
+
+**Linux**
+Modify `build/linux-x64.cache.cmake` first then:
+```bash
+cd build
+./linux-x64.sh
+```
+
+**Windows**
+Modify `build/vs2019-x64.cache.cmake` first then:
+```batch
+cd build
+.\vs2019-x64.cmd # on Windows
+```
+
+If you don't need `imshow()`, disable it via `-DSMALLCV_IMSHOW=OFF` when invoking cmake.
+
+If you don't need `imread()` and `imwrite()`, disable it via `-DSMALLCV_IMAGEIO=OFF` when invoking cmake.
+
+
 ## Example Usage
 ```c++
 #include <string>
