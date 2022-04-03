@@ -29,7 +29,7 @@ option(SMALLCV_TEST "build test?" ON)
 include("cmake/deps.cmake")
 include("cmake/overlook.cmake")
 include("cmake/output_dir.cmake")
-# include("cmake/asan.cmake")
+include("cmake/asan.cmake")
 # include("cmake/tsan.cmake")
 
 if(NOT CMAKE_BUILD_TYPE)

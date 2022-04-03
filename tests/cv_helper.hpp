@@ -1,7 +1,9 @@
 #pragma once
 
-#include "smallcv.hpp"
+//#include <opencv2/opencv.hpp> // use opencv
+#include "smallcv.hpp" // use smallcv
 #include <iostream>
+#include <stdint.h>
 
 //--------------------------------------------------------------------------------
 // 1. 打印 Mat 数据类型(包含通道)
@@ -132,10 +134,10 @@ static bool almostEqual(const cv::Mat& expected, const cv::Mat& actual, double e
 
     int depth = expected.depth();
     switch ( depth ) {
-        case CV_8U:  return almostEqual<uchar>(expected, actual, eps);
-        case CV_8S:  return almostEqual<schar>(expected, actual, eps);
-        case CV_16U: return almostEqual<ushort>(expected, actual, eps);
-        case CV_16S: return almostEqual<short>(expected, actual, eps);
+        case CV_8U:  return almostEqual<uint8_t>(expected, actual, eps);
+        case CV_8S:  return almostEqual<int8_t>(expected, actual, eps);
+        case CV_16U: return almostEqual<uint16_t>(expected, actual, eps);
+        case CV_16S: return almostEqual<int16_t>(expected, actual, eps);
         case CV_32S: return almostEqual<int>(expected, actual, eps);
         case CV_32F: return almostEqual<float>(expected, actual, eps);
         case CV_64F: return almostEqual<double>(expected, actual, eps);

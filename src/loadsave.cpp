@@ -24,7 +24,7 @@ cv::Mat cv::imread(const char* image_path)
     int channels;
     unsigned char* raw_data = stbi_load(image_path, &width, &height, &channels, 0);
     assert(raw_data != NULL);
-    //assert(channels == 3); // TODO: support gray image and detect 4-channel RGBA image
+    // TODO: detect 4-channel RGBA image
     Size size(width, height);
     Mat image(size, CV_8UC(channels));
     uchar* image_data = image.data;
@@ -57,8 +57,7 @@ void cv::imwrite(const char* filename, const cv::Mat& image)
     
     assert(image.data != NULL);
 
-    //Size size = image.size();
-    Size size(width, height);
+    Size size = image.size();
     int type;
     const int channels = image.channels();
     switch (channels)
