@@ -36,7 +36,7 @@ jobs:
     #       mkdir build && cd build
     #       if [ '${{runner.os}}' == 'Windows' ]; then
     #         echo "Yes, this is on Windows"
-    #         cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/glfw-install -G "Visual Studio 16 2019" -A x64
+    #         cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/glfw-install -G "Visual Studio 17 2022" -A x64
     #       else
     #         echo "Ohh, this is not on Windows"
     #         cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX='${{github.workspace}}'/glfw-install -G Ninja
