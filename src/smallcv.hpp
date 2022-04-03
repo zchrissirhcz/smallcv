@@ -54,10 +54,27 @@ namespace cv {
 // Mat
 //------------------------------------------------------------
 
-struct Size
+class Size
 {
-    int height;
+public:
     int width;
+    int height;
+
+public:
+    Size(): width(0), height(0) {}
+    Size(int _width, int _height) : width(_width), height(_height) {}
+
+    template<typename T2>
+    Size operator* (T2 scale)
+    {
+        return Size(width * scale, height * scale);
+    }
+
+    template<typename T2>
+    Size operator* (T2 scale) const
+    {
+        return Size(width * scale, height * scale);
+    }
 };
 
 class Mat
@@ -86,8 +103,8 @@ public:
     int depth() const;
     uchar* ptr(int i0=0);
     const uchar* ptr(int i0=0) const; // TODO
-    uchar* ptr(int i0, int i1); // TODO
-    const uchar* ptr(int i0, int i1) const; // TODO
+    uchar* ptr(int i0, int i1);
+    const uchar* ptr(int i0, int i1) const;
     int step1() const; // TODO
 
 private:

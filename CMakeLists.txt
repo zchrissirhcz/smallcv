@@ -23,7 +23,7 @@ option(SMALLCV_USE_VLD  "Use VLD for memleak check?" OFF)
 
 option(SMALLCV_EXAMPLES "Build ncnn examples?" ON)
 option(SMALLCV_EXAMPLES_NCNN "ncnn examples?" OFF)
-option(SMALLCV_TEST "build test?" OFF)
+option(SMALLCV_TEST "build test?" ON)
 
 
 include("cmake/deps.cmake")
@@ -97,11 +97,14 @@ if(SMALLCV_TEST)
   find_package(GTest REQUIRED)
 
   macro(smallcv_add_test name)
-    add_executable(test_${name} tests/test_${name}.cpp)
-    target_link_libraries(test_${name} PRIVATE smallcv GTest::gtest GTest::gtest_main)
-    target_include_directories(test_${name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+    add_executable(test_${name} ${CMAKE_SOURCE_DIR}/tests/test_${name}.cpp)
+    set(dep_libs smallcv ${ARGN} GTest::gtest GTest::gtest_main)
+    if(ANDROID)
+      list(APPEND dep_libs log)
+    endif()
+    target_link_libraries(test_${name} PRIVATE ${dep_libs})
     gtest_add_tests(TARGET test_${name})
   endmacro()
 
-  smallcv_add_test(version)
+  smallcv_add_test(size)
 endif()

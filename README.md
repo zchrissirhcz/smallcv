@@ -83,9 +83,7 @@ int main()
     
     cv::Mat bigger_image;
     cv::Size ssize = image.size();
-    cv::Size dsize;
-    dsize.height = ssize.height * 2;
-    dsize.width = ssize.width * 2;
+    cv::Size dsize = ssize * 2;
     cv::resize(image, bigger_image, dsize);
 
     cv::Mat gray;

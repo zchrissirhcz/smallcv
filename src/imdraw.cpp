@@ -358,14 +358,10 @@ void draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* t
 
             // draw resized character
             //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
-            Size font_bitmap_size;
-            font_bitmap_size.width = 20;
-            font_bitmap_size.height = 40;
+            Size font_bitmap_size(20, 40);
             const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
 
-            Size dsize;
-            dsize.width = fontpixelsize;
-            dsize.height = fontpixelsize * 2;
+            Size dsize(fontpixelsize, fontpixelsize * 2);
             Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
 
             resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
@@ -431,14 +427,10 @@ void draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* t
             // draw resized character
             //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
 
-            Size font_bitmap_size;
-            font_bitmap_size.width = 20;
-            font_bitmap_size.height = 40;
+            Size font_bitmap_size(20, 40);
             const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
 
-            Size dsize;
-            dsize.width = fontpixelsize;
-            dsize.height = fontpixelsize * 2;
+            Size dsize(fontpixelsize, fontpixelsize*2);
             Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
 
             resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
@@ -505,14 +497,10 @@ void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* t
             // draw resized character
             //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
 
-            Size font_bitmap_size;
-            font_bitmap_size.width = 20;
-            font_bitmap_size.height = 40;
+            Size font_bitmap_size(20, 40);
             const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
 
-            Size dsize;
-            dsize.width = fontpixelsize;
-            dsize.height = fontpixelsize * 2;
+            Size dsize(fontpixelsize, fontpixelsize * 2);
             Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
 
             resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
@@ -579,14 +567,10 @@ void draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* t
             // draw resized character
             //resize_bilinear_c1(font_bitmap, 20, 40, resized_font_bitmap, fontpixelsize, fontpixelsize * 2);
 
-            Size font_bitmap_size;
-            font_bitmap_size.width = 20;
-            font_bitmap_size.height = 40;
+            Size font_bitmap_size(20, 40);
             const Mat font_bitmap_mat(font_bitmap_size, CV_8UC1, (void*)font_bitmap);
 
-            Size dsize;
-            dsize.width = fontpixelsize;
-            dsize.height = fontpixelsize * 2;
+            Size dsize(fontpixelsize, fontpixelsize * 2);
             Mat resized_font_bitmap_mat(dsize, CV_8UC1, resized_font_bitmap);
 
             resize_linear(font_bitmap_mat, resized_font_bitmap_mat, dsize);
