@@ -4,6 +4,7 @@
 #include <string>
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
 #define STBI_NO_PSD
 #define STBI_NO_TGA
 #define STBI_NO_GIF
@@ -12,6 +13,7 @@
 #include "stb_image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_STATIC
 #include "stb_image_write.h"
 
 cv::Mat cv::imread(const char* image_path)

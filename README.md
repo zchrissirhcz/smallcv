@@ -1,7 +1,7 @@
 # SmallCV
 
 [![unittest](https://github.com/zchrissirhcz/smallcv/actions/workflows/unit_test.yml/badge.svg)](https://github.com/zchrissirhcz/smallcv/actions/workflows/unit_test.yml)
-![Widows](https://img.shields.io/badge/Windows-gray?logo=windows&logoColor=blue)
+![Windows](https://img.shields.io/badge/Windows-gray?logo=windows&logoColor=blue)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-gray?logo=ubuntu)
 ![macOS](https://img.shields.io/badge/-macOS-333333?style=flat&logo=apple)
 
