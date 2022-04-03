@@ -314,7 +314,7 @@ void resize_nearest(const Mat& src, Mat& dst, Size dsize);
 // imshow
 //------------------------------------------------------------
 #ifdef SMALLCV_IMSHOW
-void imshow(const char* winname, const Mat& im);
+void imshow(const char* winname, const Mat& im, bool resize=false);
 void waitKey(int milli_secs);
 #endif // SMALLCV_IMSHOW
 

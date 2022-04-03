@@ -45,7 +45,6 @@ set(smallcv_srcs
   ${CMAKE_SOURCE_DIR}/src/imdraw.cpp
   ${CMAKE_SOURCE_DIR}/src/imgproc.cpp
   ${CMAKE_SOURCE_DIR}/src/smallcv.cpp
-  ${CMAKE_SOURCE_DIR}/src/timer.cpp
 )
 
 add_library(smallcv STATIC)
@@ -60,7 +59,6 @@ target_include_directories(smallcv
 )
 
 if(SMALLCV_IMAGEIO)
-  list(APPEND smallcv_srcs ${CMAKE_SOURCE_DIR}/src/loadsave.cpp)
   target_compile_definitions(smallcv PUBLIC -DSMALLCV_IMAGEIO)
   target_include_directories(smallcv PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/stb")
 endif()

@@ -28,7 +28,7 @@ int main() {
         cv::putText(gray, "gray", cv::Point(60, 60), 10, 1, cv::Scalar(255, 0, 0), 2);
 
         cv::imshow("mingren", image);
-        cv::imshow("bigger image", bigger_image);
+        cv::imshow("bigger image", bigger_image, true);
         cv::imshow("gray", gray);
 
         cv::waitKey(0);

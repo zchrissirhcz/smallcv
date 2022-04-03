@@ -2,13 +2,12 @@
 
 namespace cv {
 
-static void fc_glfw_show_image(const char* title, const Mat& im);
+static void fc_glfw_show_image(const char* title, const Mat& im, bool resize);
 static void fc_glfw_wait_key(int decay); // milliseconds
-static void fc_glfw_set_window_resizable(bool b);
 
-void imshow(const char* winname, const Mat& im)
+void imshow(const char* winname, const Mat& im, bool resize)
 {
-    fc_glfw_show_image(winname, im);
+    fc_glfw_show_image(winname, im, resize);
 }
 
 void waitKey(int delay)
@@ -62,7 +61,7 @@ struct FcGlfwWindow {
 };
 
 // global variables. start with `g_fc_` as prefix
-static FcWindowFlag g_fc_window_flag = FC_WINDOW_FIXED; //on default, no resize
+//static FcWindowFlag g_fc_window_flag = FC_WINDOW_FIXED; //on default, no resize
 static FcGlfwWindow* g_fc_windows = NULL;
 
 
@@ -87,7 +86,6 @@ static FcGlfwWindow* fc_glfw_get_window(const char* title, int width, int height
         win->glfw_window = glfwCreateWindow(width, height, title, NULL, NULL);
         if (!win->glfw_window)
             return NULL;
-        win->flag = g_fc_window_flag;
         //win->title = title;
         strcpy(win->title, title);
         win->next = NULL;
@@ -115,7 +113,6 @@ static FcGlfwWindow* fc_glfw_get_window(const char* title, int width, int height
             win->glfw_window = glfwCreateWindow(width, height, title, NULL, NULL);
             if (!win->glfw_window)
                 return NULL;
-            win->flag = g_fc_window_flag;
             //win->title = title;
             strcpy(win->title, title);
             win->next = NULL;
@@ -204,7 +201,7 @@ static inline int fc_glfw_get_random(int a, int b)
     return res;
 }
 
-void fc_glfw_show_image(const char* title, const Mat& im)
+void fc_glfw_show_image(const char* title, const Mat& im, bool resize)
 {
     int x, y, width;
     srand(time(0));
@@ -219,9 +216,10 @@ void fc_glfw_show_image(const char* title, const Mat& im)
         exit(EXIT_FAILURE);
     }
 
-    if (g_fc_window_flag == FC_WINDOW_FIXED) {
-        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    }
+    if (resize)
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+    else
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
     FcGlfwWindow* win = fc_glfw_get_window(title, im.cols, im.rows);
 
@@ -243,15 +241,6 @@ void fc_glfw_show_image(const char* title, const Mat& im)
 
     //glfwMakeContextCurrent(win->glfw_window);
     glfwHideWindow(win->glfw_window);
-}
-
-void fc_glfw_set_window_resizable(bool b) {
-    if (b) {
-        g_fc_window_flag = FC_WINDOW_RESIZEABLE;
-    }
-    else {
-        g_fc_window_flag = FC_WINDOW_FIXED;
-    }
 }
 
 void fc_glfw_wait_key(int delay)
@@ -340,48 +329,6 @@ void fc_glfw_wait_key(int delay)
     }
     glfwTerminate();
 }
-
-/*
-int fc_glfw_imshow_test_main(void)
-{
-    const char* im_pth;
-    const char* title;
-
-    im_pth = "F:/zhangzhuo/dev/libfc/imgs/op.png";
-    Image im3 = fc_load_image(im_pth);
-    title = "op";
-    fc_glfw_show_image(title, &im3);
-
-    im_pth = "F:/zhangzhuo/dev/libfc/imgs/Lena.png";
-    Image im2 = fc_load_image(im_pth);
-    title = "lena";
-    fc_glfw_show_image(title, &im2);
-
-    im_pth = "F:/zhangzhuo/dev/libfc/imgs/awesomeface.png";
-    Image im4 = fc_load_image(im_pth);
-    title = "awe";
-    fc_glfw_show_image(title, &im4);
-
-    im_pth = "F:/zhangzhuo/dev/libfc/imgs/fruits.jpg";
-    Image im = fc_load_image(im_pth);
-    title = "fruits";
-    fc_glfw_show_image(title, &im);
-
-
-    fc_glfw_wait_key(0);
-
-
-    printf("hoho! you got it!\n");
-
-    return 0;
-}
-*/
-
-//int main() {
-//  fc_glfw_imshow_test_main();
-//
-//  return 0;
-//}
 
 } // namespace cv
 

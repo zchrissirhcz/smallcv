@@ -5,7 +5,9 @@
 
 #include "mat_pixel_drawing_font.h"
 
-namespace cv {
+namespace {
+
+using namespace cv;
 
 //----------------------------------------
 // static function declarations
@@ -13,17 +15,22 @@ namespace cv {
 static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color);
 static void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& color);
 
-//----------------------------------------
-// function implementations
-//----------------------------------------
-void line(Mat& image, Point pt1, Point pt2, const Scalar& color, int thickness)
+
+void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color)
 {
-    for (int i = -thickness; i <= thickness; i++) {
-        int x1 = pt1.x + i;
-        int y1 = pt1.y + i;
-        int x2 = pt2.x + i;
-        int y2 = pt2.y + i;
-        bressenhan_line(image, x1, y1, x2, y2, color);
+    int channels = im.channels();
+    int linebytes = im.cols * channels;
+    uchar* data = im.data;
+    uchar b = static_cast<uchar>(color.val[0]);
+    uchar g = static_cast<uchar>(color.val[1]);
+    uchar r = static_cast<uchar>(color.val[2]);
+    for (int h=dy1; h<=dy2; h++) {
+        for (int w=dx1; w<=dx2; w++) {
+            int idx = h*linebytes + w*channels;
+            data[idx] = b;
+            data[idx+1] = g;
+            data[idx+2] = r;
+        }
     }
 }
 
@@ -87,6 +94,8 @@ void bressenhan_line(Mat& image, int x1, int y1, int x2, int y2, const Scalar& c
     }
 }
 
+
+
 void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & color)
 {
     uchar* data = image.data;
@@ -125,14 +134,27 @@ void naive_line(Mat & image, int x0, int y0, int x1, int y1, const Scalar & colo
     }
 }
 
-void line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
+}
+
+void cv::line(Mat& image, Point pt1, Point pt2, const Scalar& color, int thickness)
+{
+    for (int i = -thickness; i <= thickness; i++) {
+        int x1 = pt1.x + i;
+        int y1 = pt1.y + i;
+        int x2 = pt2.x + i;
+        int y2 = pt2.y + i;
+        bressenhan_line(image, x1, y1, x2, y2, color);
+    }
+}
+
+void cv::line(Mat& image, Point2f pt1, Point2f pt2, const Scalar& color, int thickness)
 {
     Point ipt1(static_cast<int>(pt1.x), static_cast<int>(pt1.y));
     Point ipt2(static_cast<int>(pt2.x), static_cast<int>(pt2.y));
     line(image, ipt1, ipt2, color, thickness);
 }
 
-void circle(Mat& image, Point center, int radius, const Scalar& color, int thickness)
+void cv::circle(Mat& image, Point center, int radius, const Scalar& color, int thickness)
 {
     int x0 = center.x - radius;
     int y0 = center.y - radius;
@@ -156,31 +178,14 @@ void circle(Mat& image, Point center, int radius, const Scalar& color, int thick
     }
 }
 
-void circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)
+void cv::circle(Mat& image, Point2f center, int radius, const Scalar& color, int thickness)
 {
     Point icenter(static_cast<int>(center.x), static_cast<int>(center.y));
     circle(image, icenter, radius, color, thickness);
 }
 
-static void draw_solid_rect(Mat& im, int dx1, int dy1, int dx2, int dy2, const Scalar color)
-{
-    int channels = im.channels();
-    int linebytes = im.cols * channels;
-    uchar* data = im.data;
-    uchar b = static_cast<uchar>(color.val[0]);
-    uchar g = static_cast<uchar>(color.val[1]);
-    uchar r = static_cast<uchar>(color.val[2]);
-    for (int h=dy1; h<=dy2; h++) {
-        for (int w=dx1; w<=dx2; w++) {
-            int idx = h*linebytes + w*channels;
-            data[idx] = b;
-            data[idx+1] = g;
-            data[idx+2] = r;
-        }
-    }
-}
 
-void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness)
+void cv::rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness)
 {
     int image_height = im.rows;
     int image_width = im.cols;
@@ -281,7 +286,7 @@ void rectangle(Mat& im, const Rect& rect, const Scalar& color, int thickness)
     draw_solid_rect(im, dx1, dy1, dx2, dy2, color);
 }
 
-void get_text_drawing_size(const char* text, int fontpixelsize, int* w, int* h)
+void cv::get_text_drawing_size(const char* text, int fontpixelsize, int* w, int* h)
 {
     *w = 0;
     *h = 0;
@@ -311,27 +316,27 @@ void get_text_drawing_size(const char* text, int fontpixelsize, int* w, int* h)
     *h += fontpixelsize * 2;
 }
 
-void draw_text_c1(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c1(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     return draw_text_c1(pixels, w, h, w, text, x, y, fontpixelsize, color);
 }
 
-void draw_text_c2(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c2(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     return draw_text_c2(pixels, w, h, w * 2, text, x, y, fontpixelsize, color);
 }
 
-void draw_text_c3(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c3(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     return draw_text_c3(pixels, w, h, w * 3, text, x, y, fontpixelsize, color);
 }
 
-void draw_text_c4(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c4(unsigned char* pixels, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     return draw_text_c4(pixels, w, h, w * 4, text, x, y, fontpixelsize, color);
 }
 
-void draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     const unsigned char* pen_color = (const unsigned char*)&color;
 
@@ -398,7 +403,7 @@ void draw_text_c1(unsigned char* pixels, int w, int h, int stride, const char* t
     delete[] resized_font_bitmap;
 }
 
-void draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     const unsigned char* pen_color = (const unsigned char*)&color;
 
@@ -468,7 +473,7 @@ void draw_text_c2(unsigned char* pixels, int w, int h, int stride, const char* t
     delete[] resized_font_bitmap;
 }
 
-void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     const unsigned char* pen_color = (const unsigned char*)&color;
 
@@ -539,7 +544,7 @@ void draw_text_c3(unsigned char* pixels, int w, int h, int stride, const char* t
     delete[] resized_font_bitmap;
 }
 
-void draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     const unsigned char* pen_color = (const unsigned char*)&color;
 
@@ -610,7 +615,7 @@ void draw_text_c4(unsigned char* pixels, int w, int h, int stride, const char* t
     delete[] resized_font_bitmap;
 }
 
-void draw_text_yuv420sp(unsigned char* yuv420sp, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
+void cv::draw_text_yuv420sp(unsigned char* yuv420sp, int w, int h, const char* text, int x, int y, int fontpixelsize, unsigned int color)
 {
     // assert w % 2 == 0
     // assert h % 2 == 0
@@ -633,6 +638,4 @@ void draw_text_yuv420sp(unsigned char* yuv420sp, int w, int h, const char* text,
 
     unsigned char* UV = yuv420sp + w * h;
     draw_text_c2(UV, w / 2, h / 2, text, x / 2, y / 2, std::max(fontpixelsize / 2, 1), v_uv);
-}
-
 }
