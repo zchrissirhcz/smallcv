@@ -28,20 +28,14 @@ Small Computer Vision Library.
 To build this project, you are assumed:
 
 - Familiar with CMake based C/C++ building
-- Installed **glfw** library, which is relied by `imshow()`
+- Install **glfw** for `imshow()`. See [deps/glfw_build](deps/glfw_build) for build hints.
+- Modify [cmake/deps.cmake](cmake/deps.cmake) to specify dependencies paths.
 
-**Linux**
-Modify `build/linux-x64.cache.cmake` first then:
 ```bash
 cd build
-./linux-x64.sh
-```
-
-**Windows**
-Modify `build/vs2019-x64.cache.cmake` first then:
-```batch
-cd build
-.\vs2019-x64.cmd # on Windows
+./linux-x64.sh   # Linux build
+./Xcode.sh       # macOSX build
+.\vs2019-x64.cmd # Windows build
 ```
 
 If you don't need `imshow()`, disable it via `-DSMALLCV_IMSHOW=OFF` when invoking cmake.

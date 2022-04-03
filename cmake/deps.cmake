@@ -13,7 +13,16 @@ endif()
 #----------------------------------------------------------------------#
 # glfw
 #----------------------------------------------------------------------#
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  set(glfw3_DIR "E:/artifacts/glfw/3.3.5/vs2019-x64/lib/cmake/glfw3" CACHE PATH "Directory that contains glfw3Config.cmake")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(glfw3_DIR "/home/zz/soft/glfw/3.3-stable/lib/cmake/glfw3" CACHE PATH "Directory that contains glfw3Config.cmake")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  set(glfw3_DIR "" CACHE PATH "Directory that contains glfw3Config.cmake")
+endif()
+
 if(SMALLCV_IMSHOW)
+  message(STATUS "glfw3_DIR: ${glfw3_DIR}")
   find_package(glfw3 QUIET) # 3.3-stable branch recommended
   if(glfw3_FOUND)
     message(STATUS "[Found glfw3] glfw3_DIR is ${glfw3_DIR}")
@@ -41,7 +50,16 @@ endif()
 #----------------------------------------------------------------------#
 # ncnn
 #----------------------------------------------------------------------#
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  set(ncnn_DIR "E:/artifacts/ncnn/20210720/vs2019-x64/lib/cmake/ncnn" CACHE PATH "Directory that contains ncnnConfig.cmake")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(ncnn_DIR "/home/zz/soft/ncnn/20210524/lib/cmake/ncnn" CACHE PATH "Directory that contain ncnnConfig.cmake")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  set(ncnn_DIR "/Users/chris/soft/ncnn/20201218/lib/cmake/ncnn" CACHE PATH "Directory that contains ncnnConfig.cmake")
+endif()
+
 if(SMALLCV_EXAMPLES_NCNN)
+  message(STATUS "ncnn_DIR: ${ncnn_DIR}")
   find_package(ncnn REQUIRED) # >= 20201218 recommended
   if(ncnn_FOUND)
     message(STATUS "[Found ncnn] ncnn_DIR is ${ncnn_DIR}")
